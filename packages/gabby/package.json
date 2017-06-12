@@ -1,0 +1,70 @@
+{
+  "name": "gab",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "gulp ts",
+    "test": "jest",
+    "watch": "gulp watch",
+    "watch:build": "gulp watch:build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/americanexpress/gabby/tree/master/packages/gabby"
+  },
+  "keywords": [],
+  "author": "Zach Ripka",
+  "license": "Apache-2.0",
+  "jest": {
+    "transform": {
+      ".(ts|tsx)": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+    },
+    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ],
+    "mapCoverage": true,
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "src/**/*.{ts,tsx}"
+    ],
+    "coverageDirectory": "test-results",
+    "coverageThreshold": {
+      "global": {
+        "branches": 100,
+        "functions": 100,
+        "lines": 100,
+        "statements": 100
+      }
+    },
+    "coveragePathIgnorePatterns": [
+      "./src/components"
+    ]
+  },
+  "devDependencies": {
+    "@types/jest": "^19.2.4",
+    "@types/prop-types": "^15.5.1",
+    "@types/react": "^15.0.26",
+    "@types/uuid": "^3.0.0",
+    "@types/watson-developer-cloud": "^2.31.0",
+    "gulp": "^3.9.1",
+    "gulp-typescript": "^3.1.7",
+    "jest": "^20.0.4",
+    "merge2": "^1.0.3",
+    "nodemon": "^1.11.0",
+    "ts-jest": "^20.0.5",
+    "typescript": "^2.4.0-dev.20170603"
+  },
+  "dependencies": {
+    "log-update": "^2.0.0",
+    "prop-types": "^15.5.10",
+    "react": "^15.5.4",
+    "react-router": "^4.1.1",
+    "react-router-config": "^1.0.0-beta.3",
+    "uuid": "^3.0.1",
+    "watson-developer-cloud": "^2.32.1"
+  }
+}
