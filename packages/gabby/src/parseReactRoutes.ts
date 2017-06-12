@@ -7,11 +7,10 @@ export default function parseReactRoutes(routes): IRoutes {
   function recurse(node, prevNode?) {
     let nextNodes = [].concat(node.props.children).filter(Boolean);
 
-    const { name = 'root', when, to, component } = node.props;
+    const { name, when, to, component } = node.props;
 
     return {
-      id: `${namespace}.${name}`,
-      name: `${namespace}.${name}`,
+      name: name && `${namespace}.${name}`,
       when,
       to,
       handler: component,

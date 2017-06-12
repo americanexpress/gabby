@@ -1,5 +1,4 @@
 export interface IRouteNode {
-  id: string;
   name: string;
   to?: string;
   when: string;

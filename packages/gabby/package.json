@@ -41,7 +41,8 @@
       }
     },
     "coveragePathIgnorePatterns": [
-      "./src/components"
+      "./src/components",
+      "./src/interfaces.ts"
     ]
   },
   "devDependencies": {
@@ -60,7 +61,6 @@
   },
   "dependencies": {
     "log-update": "^2.0.0",
-    "prop-types": "^15.5.10",
     "react": "^15.5.4",
     "react-router": "^4.1.1",
     "react-router-config": "^1.0.0-beta.3",
