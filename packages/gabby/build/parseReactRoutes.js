@@ -5,10 +5,9 @@ function parseReactRoutes(routes) {
     var tree = {};
     function recurse(node, prevNode) {
         var nextNodes = [].concat(node.props.children).filter(Boolean);
-        var _a = node.props, _b = _a.name, name = _b === void 0 ? 'root' : _b, when = _a.when, to = _a.to, component = _a.component;
+        var _a = node.props, name = _a.name, when = _a.when, to = _a.to, component = _a.component;
         return {
-            id: namespace + "." + name,
-            name: namespace + "." + name,
+            name: name && namespace + "." + name,
             when: when,
             to: to,
             handler: component,

@@ -3,9 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 function createHandlers(routes) {
     var tree = new Map();
     function recurse(node) {
-        var id = node.id, children = node.children, handler = node.handler;
+        var name = node.name, children = node.children, handler = node.handler;
         if (handler) {
-            tree.set(id, handler);
+            tree.set(name, handler);
         }
         children.forEach(function (child) { return recurse(child); });
     }
