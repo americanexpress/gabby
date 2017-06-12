@@ -24,27 +24,22 @@ const routes = (
 describe('Parse Routes', () => {
   it('should return correct object structure', () => {
     expect(parseReactRoutes(routes)).toEqual({
-      id: 'root(mocked)',
-      name: 'root',
       children: [
         {
-          id: 'Select Plan(mocked)',
-          name: 'Select Plan',
+          name: 'mocked.Select Plan',
           when: '#select_plan',
           to: undefined,
           handler: SelectPlan,
           children: [
             {
-              id: 'Accept Terms(mocked)',
-              name: 'Accept Terms',
+              name: 'mocked.Accept Terms',
               when: '#accept',
               to: undefined,
               handler: TermsAccepted,
               children: [],
             },
             {
-              id: 'Decline Terms(mocked)',
-              name: 'Decline Terms',
+              name: 'mocked.Decline Terms',
               when: '#decline',
               to: 'Goodbye',
               handler: undefined,
@@ -53,16 +48,14 @@ describe('Parse Routes', () => {
           ],
         },
         {
-          id: 'Goodbye(mocked)',
-          name: 'Goodbye',
+          name: 'mocked.Goodbye',
           when: undefined,
           to: undefined,
           handler: Goodbye,
           children: [],
         },
         {
-          id: 'Help(mocked)',
-          name: 'Help',
+          name: 'mocked.Help',
           when: '#help',
           to: undefined,
           handler: Help,

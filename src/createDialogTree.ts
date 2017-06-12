@@ -4,8 +4,8 @@ export default function createDialogTree(routes) {
   function recurse(node, prevNode?, prevSibling?) {
     let nextNodes = [].concat(node.children).filter(Boolean);
 
-    if (node.name !== 'root.root') {
-      const { name, to, when, id } = node;
+    if (node.name) {
+      const { name, to, when } = node;
       tree.push({
         dialog_node: name,
         go_to: to ? {
@@ -16,13 +16,13 @@ export default function createDialogTree(routes) {
         // no output if we're redirecting
         output: to ? {} : {
           values: [
-            { template: id }
+            { template: name }
           ],
           // TODO: Make this configurable
           selection_policy: 'sequential'
         },
         conditions: when || null,
-        parent: (prevNode && prevNode.name !== 'root.root') ? prevNode.name : null,
+        parent: (prevNode && prevNode.name) ? prevNode.name : null,
         previous_sibling: prevSibling ? prevSibling.name : null,
       });
     }

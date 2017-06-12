@@ -4,9 +4,9 @@ export default function createHandlers(routes: IRoutes) {
   const tree: IHandlers = new Map();
 
   function recurse(node: IRouteNode) {
-    const { id, children, handler } = node;
+    const { name, children, handler } = node;
     if (handler) {
-      tree.set(id, handler);
+      tree.set(name, handler);
     }
 
     children.forEach(child => recurse(child));
