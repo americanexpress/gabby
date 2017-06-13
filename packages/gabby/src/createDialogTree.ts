@@ -1,8 +1,13 @@
 export default function createDialogTree(routes) {
   const tree = [];
+  let lastNodeName = null;
 
   function recurse(node, prevNode?, prevSibling?) {
     let nextNodes = [].concat(node.children).filter(Boolean);
+
+    if (!node.name) {
+      lastNodeName = (prevSibling && prevSibling.name) || null;
+    }
 
     if (node.name) {
       const { name, to, when } = node;
@@ -23,11 +28,15 @@ export default function createDialogTree(routes) {
         },
         conditions: when || null,
         parent: (prevNode && prevNode.name) ? prevNode.name : null,
-        previous_sibling: prevSibling ? prevSibling.name : null,
+        previous_sibling: (prevSibling && prevSibling.name) || lastNodeName,
       });
+
+      lastNodeName = null;
     }
 
-    nextNodes.forEach((n, index, arr) => recurse(n, node, arr[index-1]));
+    nextNodes.forEach((n, index, arr) => {
+      recurse(n, node, arr[index-1]);
+    });
   }
 
   recurse(routes);
