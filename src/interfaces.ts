@@ -37,9 +37,9 @@ export interface IWatsonCredentials {
 }
 
 export interface IWatsonProps {
-  routes: IRoutes;
-  intents: IIntents;
-  entities: IEntities;
+  routes?: IRoutes;
+  intents?: IIntents;
+  entities?: IEntities;
   credentials: IWatsonCredentials;
 }
 
