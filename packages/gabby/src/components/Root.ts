@@ -1,5 +1,9 @@
 import { StatelessComponent } from 'react';
 
-const Root: StatelessComponent<{ namespace: string; }> = () => null;
+export interface IRootProps {
+  namespace: string;
+}
+
+const Root: StatelessComponent<IRootProps> = () => null;
 
 export default Root;
