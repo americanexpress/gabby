@@ -2,8 +2,12 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 function createDialogTree(routes) {
     var tree = [];
+    var lastNodeName = null;
     function recurse(node, prevNode, prevSibling) {
         var nextNodes = [].concat(node.children).filter(Boolean);
+        if (!node.name) {
+            lastNodeName = (prevSibling && prevSibling.name) || null;
+        }
         if (node.name) {
             var name_1 = node.name, to = node.to, when = node.when;
             tree.push({
@@ -23,10 +27,13 @@ function createDialogTree(routes) {
                 },
                 conditions: when || null,
                 parent: (prevNode && prevNode.name) ? prevNode.name : null,
-                previous_sibling: prevSibling ? prevSibling.name : null,
+                previous_sibling: (prevSibling && prevSibling.name) || lastNodeName,
             });
+            lastNodeName = null;
         }
-        nextNodes.forEach(function (n, index, arr) { return recurse(n, node, arr[index - 1]); });
+        nextNodes.forEach(function (n, index, arr) {
+            recurse(n, node, arr[index - 1]);
+        });
     }
     recurse(routes);
     return tree;
