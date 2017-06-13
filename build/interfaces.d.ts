@@ -33,5 +33,6 @@ export interface IWatsonProps {
     intents?: IIntents;
     entities?: IEntities;
     credentials: IWatsonCredentials;
+    name?: string;
 }
 export declare type IHandlers = Map<string, Function>;

@@ -17,6 +17,7 @@ function timeout(ms = 1000) {
 }
 
 export class Watson extends ConversationV1 {
+  private workspaceName: string;
   private credentials: IWatsonCredentials;
   private routes: IRoutes;
   private intents: IIntents;
@@ -25,13 +26,14 @@ export class Watson extends ConversationV1 {
 
   private contexts = new Map<string, object>();
 
-  constructor({ credentials, routes, intents = [], entities = [] }: IWatsonProps) {
+  constructor({ name = '', credentials, routes, intents = [], entities = [] }: IWatsonProps) {
     super({
       username: credentials.username,
       password: credentials.password,
       version_date: ConversationV1.VERSION_DATE_2017_04_21,
     });
 
+    this.workspaceName = name;
     this.credentials = credentials;
     this.routes = routes;
     this.intents = intents;
@@ -39,7 +41,10 @@ export class Watson extends ConversationV1 {
     this.handlers = createHandlers(routes);
   }
 
-  init() {
+  // apply the current routes, intents, entities, etc
+  // to watson - this will wait until Watson is done training and then
+  // resolve
+  applyChanges() {
     const dialog_nodes = createDialogTree(this.routes);
     const parsedIntents = createIntents(this.intents);
     const parsedEntities = createEntities(this.entities);
@@ -47,8 +52,8 @@ export class Watson extends ConversationV1 {
     return new Promise((resolve, reject) => {
       this.updateWorkspace({
         workspace_id: this.credentials.workspaceId,
-        name: 'watson test',
-        description: 'watson testing',
+        name: this.workspaceName,
+        description: '',
         dialog_nodes,
         intents: parsedIntents,
         entities: parsedEntities,
@@ -126,7 +131,18 @@ export class Watson extends ConversationV1 {
   }
 
   setRoutes(routes: IRoutes) {
-    // set our routes and upload them
+    this.routes = routes;
+    return this;
+  }
+
+  setIntents(intents: IIntents) {
+    this.intents = intents;
+    return this;
+  }
+
+  setEntities(entities: IEntities) {
+    this.entities = entities;
+    return this;
   }
 }
 
