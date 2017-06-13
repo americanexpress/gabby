@@ -1,7 +1,7 @@
 import { StatelessComponent } from 'react';
 import * as PropTypes from 'prop-types';
 
-interface IRouteProps {
+export interface IRouteProps {
   name: string;
   component: Function;
   when?: string;

@@ -1,7 +1,7 @@
 import { StatelessComponent } from 'react';
 import * as PropTypes from 'prop-types';
 
-interface IRedirectProps {
+export interface IRedirectProps {
   name: string;
   when: string;
   to: string;
