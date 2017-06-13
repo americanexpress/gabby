@@ -29,9 +29,9 @@ export interface IWatsonCredentials {
     workspaceId: string;
 }
 export interface IWatsonProps {
-    routes: IRoutes;
-    intents: IIntents;
-    entities: IEntities;
+    routes?: IRoutes;
+    intents?: IIntents;
+    entities?: IEntities;
     credentials: IWatsonCredentials;
 }
 export declare type IHandlers = Map<string, Function>;
