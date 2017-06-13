@@ -61,13 +61,14 @@ function timeout(ms) {
 var Watson = (function (_super) {
     __extends(Watson, _super);
     function Watson(_a) {
-        var credentials = _a.credentials, routes = _a.routes, _b = _a.intents, intents = _b === void 0 ? [] : _b, _c = _a.entities, entities = _c === void 0 ? [] : _c;
+        var _b = _a.name, name = _b === void 0 ? '' : _b, credentials = _a.credentials, routes = _a.routes, _c = _a.intents, intents = _c === void 0 ? [] : _c, _d = _a.entities, entities = _d === void 0 ? [] : _d;
         var _this = _super.call(this, {
             username: credentials.username,
             password: credentials.password,
             version_date: watson_developer_cloud_1.ConversationV1.VERSION_DATE_2017_04_21,
         }) || this;
         _this.contexts = new Map();
+        _this.workspaceName = name;
         _this.credentials = credentials;
         _this.routes = routes;
         _this.intents = intents;
@@ -75,7 +76,10 @@ var Watson = (function (_super) {
         _this.handlers = createHandlers_1.default(routes);
         return _this;
     }
-    Watson.prototype.init = function () {
+    // apply the current routes, intents, entities, etc
+    // to watson - this will wait until Watson is done training and then
+    // resolve
+    Watson.prototype.applyChanges = function () {
         var _this = this;
         var dialog_nodes = createDialogTree_1.default(this.routes);
         var parsedIntents = createIntents_1.default(this.intents);
@@ -83,8 +87,8 @@ var Watson = (function (_super) {
         return new Promise(function (resolve, reject) {
             _this.updateWorkspace({
                 workspace_id: _this.credentials.workspaceId,
-                name: 'watson test',
-                description: 'watson testing',
+                name: _this.workspaceName,
+                description: '',
                 dialog_nodes: dialog_nodes,
                 intents: parsedIntents,
                 entities: parsedEntities,
@@ -168,7 +172,16 @@ var Watson = (function (_super) {
         });
     };
     Watson.prototype.setRoutes = function (routes) {
-        // set our routes and upload them
+        this.routes = routes;
+        return this;
+    };
+    Watson.prototype.setIntents = function (intents) {
+        this.intents = intents;
+        return this;
+    };
+    Watson.prototype.setEntities = function (entities) {
+        this.entities = entities;
+        return this;
     };
     return Watson;
 }(watson_developer_cloud_1.ConversationV1));
