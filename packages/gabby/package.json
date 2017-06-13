@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "build/index.js",
+  "types": "build/index.d.ts",
   "scripts": {
     "build": "rm -rf ./build && gulp ts",
     "test": "jest",
@@ -47,9 +48,7 @@
   },
   "devDependencies": {
     "@types/jest": "^19.2.4",
-    "@types/prop-types": "^15.5.1",
     "@types/react": "^15.0.26",
-    "@types/uuid": "^3.0.0",
     "@types/watson-developer-cloud": "^2.31.0",
     "gulp": "^3.9.1",
     "gulp-typescript": "^3.1.7",
@@ -62,9 +61,6 @@
   "dependencies": {
     "log-update": "^2.0.0",
     "react": "^15.5.4",
-    "react-router": "^4.1.1",
-    "react-router-config": "^1.0.0-beta.3",
-    "uuid": "^3.0.1",
     "watson-developer-cloud": "^2.32.1"
   }
 }
