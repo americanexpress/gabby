@@ -1,7 +1,7 @@
 import { StatelessComponent } from 'react';
 
 export interface IRootProps {
-  namespace: string;
+  namespace?: string;
 }
 
 const Root: StatelessComponent<IRootProps> = () => null;

@@ -41,7 +41,6 @@ const nestedNamespacesRoutes = (
 describe('Create dialog tree', () => {
   it('should create correct dialog array', () => {
     const nodes = parseReactRoutes(routes);
-
     expect(createDialogTree(nodes)).toEqual([
       {
         dialog_node: 'mocked.Select Plan',
@@ -120,7 +119,6 @@ describe('Create dialog tree', () => {
 
   it('should create correct dialog array when namespaces are nested', () => {
     const nodes = parseReactRoutes(nestedNamespacesRoutes);
-
     expect(createDialogTree(nodes)).toEqual([
       {
         dialog_node: 'mocked.Hello',
