@@ -15,8 +15,13 @@ export default function parseReactRoutes(routes): IRoutes {
     let nextNodes = [].concat(node.props.children).filter(Boolean);
     const { name, when, to, component, namespace: ns } = node.props;
 
+    let namespacedName = `${namespace}.${name}`;
+    if (!namespace) {
+      namespacedName = name;
+    }
+
     return {
-      name: name && `${namespace}.${name}`,
+      name: name && namespacedName,
       when,
       to,
       handler: component,

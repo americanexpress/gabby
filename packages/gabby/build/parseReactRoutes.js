@@ -11,8 +11,12 @@ function parseReactRoutes(routes) {
     function recurse(node, prevNode, namespace) {
         var nextNodes = [].concat(node.props.children).filter(Boolean);
         var _a = node.props, name = _a.name, when = _a.when, to = _a.to, component = _a.component, ns = _a.namespace;
+        var namespacedName = namespace + "." + name;
+        if (!namespace) {
+            namespacedName = name;
+        }
         return {
-            name: name && namespace + "." + name,
+            name: name && namespacedName,
             when: when,
             to: to,
             handler: component,
