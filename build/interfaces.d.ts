@@ -28,11 +28,18 @@ export interface IWatsonCredentials {
     password: string;
     workspaceId: string;
 }
+export interface ILogger {
+    log: Function;
+    info: Function;
+    warn: Function;
+    error: Function;
+}
 export interface IWatsonProps {
     routes?: IRoutes;
     intents?: IIntents;
     entities?: IEntities;
     credentials: IWatsonCredentials;
     name?: string;
+    logger?: ILogger;
 }
 export declare type IHandlers = Map<string, Function>;

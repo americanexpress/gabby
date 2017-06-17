@@ -1,7 +1,7 @@
 import { ConversationV1 } from 'watson-developer-cloud';
 import * as logUpdate from 'log-update';
 
-import { IWatsonProps, IWatsonCredentials, IRoutes, IIntents, IEntities, IHandlers } from '../interfaces';
+import { IWatsonProps, IWatsonCredentials, IRoutes, IIntents, IEntities, IHandlers, ILogger } from '../interfaces';
 
 import parseReactRoutes from '../parseReactRoutes';
 import createDialogTree from '../createDialogTree';
@@ -11,22 +11,21 @@ import createEntities from '../createEntities';
 import createHandlers from '../createHandlers';
 
 function timeout(ms = 1000) {
-  return new Promise(resolve => {
-    setTimeout(resolve, ms);
-  });
+  return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-export class Watson extends ConversationV1 {
+export class Gab extends ConversationV1 {
   private workspaceName: string;
   private credentials: IWatsonCredentials;
   private routes: IRoutes;
   private intents: IIntents;
   private entities: IEntities;
   private handlers: IHandlers;
+  private logger: ILogger;
 
   private contexts = new Map<string, object>();
 
-  constructor({ name = '', credentials, routes, intents = [], entities = [] }: IWatsonProps) {
+  constructor({ name = '', credentials, routes, intents = [], entities = [], logger }: IWatsonProps) {
     super({
       username: credentials.username,
       password: credentials.password,
@@ -38,7 +37,7 @@ export class Watson extends ConversationV1 {
     this.routes = routes;
     this.intents = intents;
     this.entities = entities;
-    this.handlers = createHandlers(routes);
+    this.logger = logger;
   }
 
   // apply the current routes, intents, entities, etc
@@ -49,6 +48,8 @@ export class Watson extends ConversationV1 {
     const parsedIntents = createIntents(this.intents);
     const parsedEntities = createEntities(this.entities);
 
+    this.handlers = createHandlers(this.routes);
+
     return new Promise((resolve, reject) => {
       this.updateWorkspace({
         workspace_id: this.credentials.workspaceId,
@@ -57,9 +58,13 @@ export class Watson extends ConversationV1 {
         dialog_nodes,
         intents: parsedIntents,
         entities: parsedEntities,
-      }, async (err, data) => {
+      }, async (err) => {
         if (!err) {
-          console.log('Done with initialization.');
+          /* istanbul ignore next */
+          if (this.logger) {
+            this.logger.log('Done with initialization.');
+          }
+          
           let step = 0;
           while(true) {
             await timeout(1000);
@@ -68,27 +73,40 @@ export class Watson extends ConversationV1 {
             const status = await new Promise(rs => {
               this.getWorkspace({
                 workspace_id: this.credentials.workspaceId,
-              }, (err, data) => {
+              }, (err, data: { status: string }) => {
                 if (err) {
                   return reject(err);
                 }
 
-                return rs(data.status);
+                return rs(data.status.toUpperCase());
               });
             });
 
-            if (status === 'Training') {
-              logUpdate(`Training${dots}`);
-            } else if (status === 'Available') {
-              console.log('Done training.');
-              break;
-            } else {
-              console.log('unhandled', status);
+            switch(status) {
+              case 'TRAINING': {
+                /* istanbul ignore next */
+                if (this.logger) {
+                  this.logger.log(`Training${dots}`);
+                }
+                break;
+              }
+              case 'AVAILABLE': {
+                /* istanbul ignore next */
+                if (this.logger) {
+                  this.logger.log('Done training.');
+                }
+                return resolve();
+              }
+              default: {
+                /* istanbul ignore next */
+                if (this.logger) {
+                  this.logger.error('unhandled', status);
+                }
+                return reject(new Error(`unhandled app status ${status}`));
+              }
             }
           }
-          return resolve();
         } else {
-          console.error(err);
           return reject(err);
         }
       });
@@ -130,14 +148,30 @@ export class Watson extends ConversationV1 {
     });
   }
 
+  getWorkspaceName() {
+    return this.workspaceName;
+  }
+
+  getRoutes(): IRoutes {
+    return this.routes;
+  }
+
   setRoutes(routes: IRoutes) {
     this.routes = routes;
     return this;
   }
 
+  getIntents(): IIntents {
+    return this.intents;
+  }
+
   setIntents(intents: IIntents) {
     this.intents = intents;
     return this;
+  }
+
+  getEntities(): IEntities {
+    return this.entities;
   }
 
   setEntities(entities: IEntities) {
@@ -146,4 +180,4 @@ export class Watson extends ConversationV1 {
   }
 }
 
-export default Watson;
+export default Gab;

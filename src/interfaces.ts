@@ -36,12 +36,20 @@ export interface IWatsonCredentials {
   workspaceId: string;
 }
 
+export interface ILogger {
+  log: Function;
+  info: Function;
+  warn: Function;
+  error: Function;
+}
+
 export interface IWatsonProps {
   routes?: IRoutes;
   intents?: IIntents;
   entities?: IEntities;
   credentials: IWatsonCredentials;
   name?: string;
+  logger?: ILogger;
 }
 
 export type IHandlers = Map<string, Function>;
