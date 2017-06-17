@@ -46,7 +46,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var watson_developer_cloud_1 = require("watson-developer-cloud");
-var logUpdate = require("log-update");
 var createDialogTree_1 = require("../createDialogTree");
 var createIntents_1 = require("../createIntents");
 var createEntities_1 = require("../createEntities");
@@ -54,14 +53,12 @@ var createEntities_1 = require("../createEntities");
 var createHandlers_1 = require("../createHandlers");
 function timeout(ms) {
     if (ms === void 0) { ms = 1000; }
-    return new Promise(function (resolve) {
-        setTimeout(resolve, ms);
-    });
+    return new Promise(function (resolve) { return setTimeout(resolve, ms); });
 }
-var Watson = (function (_super) {
-    __extends(Watson, _super);
-    function Watson(_a) {
-        var _b = _a.name, name = _b === void 0 ? '' : _b, credentials = _a.credentials, routes = _a.routes, _c = _a.intents, intents = _c === void 0 ? [] : _c, _d = _a.entities, entities = _d === void 0 ? [] : _d;
+var Gab = (function (_super) {
+    __extends(Gab, _super);
+    function Gab(_a) {
+        var _b = _a.name, name = _b === void 0 ? '' : _b, credentials = _a.credentials, routes = _a.routes, _c = _a.intents, intents = _c === void 0 ? [] : _c, _d = _a.entities, entities = _d === void 0 ? [] : _d, logger = _a.logger;
         var _this = _super.call(this, {
             username: credentials.username,
             password: credentials.password,
@@ -73,17 +70,18 @@ var Watson = (function (_super) {
         _this.routes = routes;
         _this.intents = intents;
         _this.entities = entities;
-        _this.handlers = createHandlers_1.default(routes);
+        _this.logger = logger;
         return _this;
     }
     // apply the current routes, intents, entities, etc
     // to watson - this will wait until Watson is done training and then
     // resolve
-    Watson.prototype.applyChanges = function () {
+    Gab.prototype.applyChanges = function () {
         var _this = this;
         var dialog_nodes = createDialogTree_1.default(this.routes);
         var parsedIntents = createIntents_1.default(this.intents);
         var parsedEntities = createEntities_1.default(this.entities);
+        this.handlers = createHandlers_1.default(this.routes);
         return new Promise(function (resolve, reject) {
             _this.updateWorkspace({
                 workspace_id: _this.credentials.workspaceId,
@@ -92,14 +90,17 @@ var Watson = (function (_super) {
                 dialog_nodes: dialog_nodes,
                 intents: parsedIntents,
                 entities: parsedEntities,
-            }, function (err, data) { return __awaiter(_this, void 0, void 0, function () {
+            }, function (err) { return __awaiter(_this, void 0, void 0, function () {
                 var _this = this;
                 var step, dots, status_1;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
                             if (!!err) return [3 /*break*/, 5];
-                            console.log('Done with initialization.');
+                            /* istanbul ignore next */
+                            if (this.logger) {
+                                this.logger.log('Done with initialization.');
+                            }
                             step = 0;
                             _a.label = 1;
                         case 1:
@@ -116,32 +117,44 @@ var Watson = (function (_super) {
                                         if (err) {
                                             return reject(err);
                                         }
-                                        return rs(data.status);
+                                        return rs(data.status.toUpperCase());
                                     });
                                 })];
                         case 3:
                             status_1 = _a.sent();
-                            if (status_1 === 'Training') {
-                                logUpdate("Training" + dots);
-                            }
-                            else if (status_1 === 'Available') {
-                                console.log('Done training.');
-                                return [3 /*break*/, 4];
-                            }
-                            else {
-                                console.log('unhandled', status_1);
+                            switch (status_1) {
+                                case 'TRAINING': {
+                                    /* istanbul ignore next */
+                                    if (this.logger) {
+                                        this.logger.log("Training" + dots);
+                                    }
+                                    break;
+                                }
+                                case 'AVAILABLE': {
+                                    /* istanbul ignore next */
+                                    if (this.logger) {
+                                        this.logger.log('Done training.');
+                                    }
+                                    return [2 /*return*/, resolve()];
+                                }
+                                default: {
+                                    /* istanbul ignore next */
+                                    if (this.logger) {
+                                        this.logger.error('unhandled', status_1);
+                                    }
+                                    return [2 /*return*/, reject(new Error("unhandled app status " + status_1))];
+                                }
                             }
                             return [3 /*break*/, 1];
-                        case 4: return [2 /*return*/, resolve()];
-                        case 5:
-                            console.error(err);
-                            return [2 /*return*/, reject(err)];
+                        case 4: return [3 /*break*/, 6];
+                        case 5: return [2 /*return*/, reject(err)];
+                        case 6: return [2 /*return*/];
                     }
                 });
             }); });
         });
     };
-    Watson.prototype.sendMessage = function (msg, to) {
+    Gab.prototype.sendMessage = function (msg, to) {
         var _this = this;
         return new Promise(function (resolve, reject) {
             _this.message({
@@ -171,19 +184,31 @@ var Watson = (function (_super) {
             });
         });
     };
-    Watson.prototype.setRoutes = function (routes) {
+    Gab.prototype.getWorkspaceName = function () {
+        return this.workspaceName;
+    };
+    Gab.prototype.getRoutes = function () {
+        return this.routes;
+    };
+    Gab.prototype.setRoutes = function (routes) {
         this.routes = routes;
         return this;
     };
-    Watson.prototype.setIntents = function (intents) {
+    Gab.prototype.getIntents = function () {
+        return this.intents;
+    };
+    Gab.prototype.setIntents = function (intents) {
         this.intents = intents;
         return this;
     };
-    Watson.prototype.setEntities = function (entities) {
+    Gab.prototype.getEntities = function () {
+        return this.entities;
+    };
+    Gab.prototype.setEntities = function (entities) {
         this.entities = entities;
         return this;
     };
-    return Watson;
+    return Gab;
 }(watson_developer_cloud_1.ConversationV1));
-exports.Watson = Watson;
-exports.default = Watson;
+exports.Gab = Gab;
+exports.default = Gab;
