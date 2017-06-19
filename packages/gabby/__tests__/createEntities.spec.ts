@@ -1,4 +1,4 @@
-import createEntities from "../src/createEntities";
+import createEntities from '../src/createEntities';
 
 describe('Create entities', () => {
   it('should return valid watson structure', () => {
@@ -19,8 +19,8 @@ describe('Create entities', () => {
         values: [
           {
             value: 'cat',
-            synonyms: ['not dog']
-          }
+            synonyms: ['not dog'],
+          },
         ],
         fuzzy_match: false,
         description: 'a furry animal',

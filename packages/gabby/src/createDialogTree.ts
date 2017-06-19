@@ -3,7 +3,7 @@ export default function createDialogTree(routes) {
   let lastNodeName = null;
 
   function recurse(node, prevNode?, prevSibling?) {
-    let nextNodes = [].concat(node.children).filter(Boolean);
+    const nextNodes = [].concat(node.children).filter(Boolean);
 
     if (!node.name) {
       lastNodeName = (prevSibling && prevSibling.name) || null;
@@ -21,10 +21,10 @@ export default function createDialogTree(routes) {
         // no output if we're redirecting
         output: to ? {} : {
           values: [
-            { template: name }
+            { template: name },
           ],
           // TODO: Make this configurable
-          selection_policy: 'sequential'
+          selection_policy: 'sequential',
         },
         conditions: when || null,
         parent: (prevNode && prevNode.name) ? prevNode.name : null,
@@ -35,7 +35,7 @@ export default function createDialogTree(routes) {
     }
 
     nextNodes.forEach((n, index, arr) => {
-      recurse(n, node, arr[index-1]);
+      recurse(n, node, arr[index - 1]);
     });
   }
 

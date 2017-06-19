@@ -1,4 +1,4 @@
-import { IIntents } from "./interfaces";
+import { IIntents } from './interfaces';
 
 // map our easier to use interface to the more complicated watson interface
 export default function createEntity(intents: IIntents) {

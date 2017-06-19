@@ -1,4 +1,4 @@
-import { IEntities } from "./interfaces";
+import { IEntities } from './interfaces';
 
 // map our easier to use interface to the more complicated watson interface
 export default function createEntity(entities: IEntities) {

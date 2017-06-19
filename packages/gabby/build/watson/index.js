@@ -58,7 +58,7 @@ function timeout(ms) {
 var Gab = (function (_super) {
     __extends(Gab, _super);
     function Gab(_a) {
-        var _b = _a.name, name = _b === void 0 ? '' : _b, credentials = _a.credentials, routes = _a.routes, _c = _a.intents, intents = _c === void 0 ? [] : _c, _d = _a.entities, entities = _d === void 0 ? [] : _d, logger = _a.logger;
+        var _b = _a.name, name = _b === void 0 ? '' : _b, credentials = _a.credentials, routes = _a.routes, _c = _a.intents, intents = _c === void 0 ? [] : _c, _d = _a.entities, entities = _d === void 0 ? [] : _d, logger = _a.logger, _e = _a.maxStatusPollCount, maxStatusPollCount = _e === void 0 ? 30 : _e, _f = _a.statusPollRate, statusPollRate = _f === void 0 ? 3000 : _f;
         var _this = _super.call(this, {
             username: credentials.username,
             password: credentials.password,
@@ -71,6 +71,8 @@ var Gab = (function (_super) {
         _this.intents = intents;
         _this.entities = entities;
         _this.logger = logger;
+        _this.maxStatusPollCount = maxStatusPollCount;
+        _this.statusPollRate = statusPollRate;
         return _this;
     }
     // apply the current routes, intents, entities, etc
@@ -92,24 +94,22 @@ var Gab = (function (_super) {
                 entities: parsedEntities,
             }, function (err) { return __awaiter(_this, void 0, void 0, function () {
                 var _this = this;
-                var step, dots, status_1;
+                var pollCount, status_1;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
-                            if (!!err) return [3 /*break*/, 5];
+                            if (!!err) return [3 /*break*/, 6];
                             /* istanbul ignore next */
                             if (this.logger) {
                                 this.logger.log('Done with initialization.');
                             }
-                            step = 0;
+                            pollCount = 0;
                             _a.label = 1;
                         case 1:
-                            if (!true) return [3 /*break*/, 4];
+                            if (!(pollCount < this.maxStatusPollCount)) return [3 /*break*/, 5];
                             return [4 /*yield*/, timeout(1000)];
                         case 2:
                             _a.sent();
-                            step = step + 1 > 3 ? 0 : step + 1;
-                            dots = '.'.repeat(step);
                             return [4 /*yield*/, new Promise(function (rs) {
                                     _this.getWorkspace({
                                         workspace_id: _this.credentials.workspaceId,
@@ -126,7 +126,7 @@ var Gab = (function (_super) {
                                 case 'TRAINING': {
                                     /* istanbul ignore next */
                                     if (this.logger) {
-                                        this.logger.log("Training" + dots);
+                                        this.logger.log('Training...');
                                     }
                                     break;
                                 }
@@ -145,10 +145,13 @@ var Gab = (function (_super) {
                                     return [2 /*return*/, reject(new Error("unhandled app status " + status_1))];
                                 }
                             }
+                            _a.label = 4;
+                        case 4:
+                            pollCount++;
                             return [3 /*break*/, 1];
-                        case 4: return [3 /*break*/, 6];
-                        case 5: return [2 /*return*/, reject(err)];
-                        case 6: return [2 /*return*/];
+                        case 5: return [3 /*break*/, 7];
+                        case 6: return [2 /*return*/, reject(err)];
+                        case 7: return [2 /*return*/];
                     }
                 });
             }); });

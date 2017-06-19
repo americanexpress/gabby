@@ -1,7 +1,15 @@
 import { ConversationV1 } from 'watson-developer-cloud';
 import * as logUpdate from 'log-update';
 
-import { IWatsonProps, IWatsonCredentials, IRoutes, IIntents, IEntities, IHandlers, ILogger } from '../interfaces';
+import {
+  IWatsonProps,
+  IWatsonCredentials,
+  IRoutes,
+  IIntents,
+  IEntities,
+  IHandlers,
+  ILogger,
+} from '../interfaces';
 
 import parseReactRoutes from '../parseReactRoutes';
 import createDialogTree from '../createDialogTree';
@@ -10,7 +18,7 @@ import createEntities from '../createEntities';
 // create a map of handlers
 import createHandlers from '../createHandlers';
 
-function timeout(ms = 1000) {
+function timeout(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
@@ -23,9 +31,23 @@ export class Gab extends ConversationV1 {
   private handlers: IHandlers;
   private logger: ILogger;
 
+  // how many times to poll before giving up
+  private maxStatusPollCount: number;
+  // how quickly to poll
+  private statusPollRate: number; // ms
+
   private contexts = new Map<string, object>();
 
-  constructor({ name = '', credentials, routes, intents = [], entities = [], logger }: IWatsonProps) {
+  constructor({
+    name = '',
+    credentials,
+    routes,
+    intents = [],
+    entities = [],
+    logger,
+    maxStatusPollCount = 30,
+    statusPollRate = 3000,
+  }: IWatsonProps) {
     super({
       username: credentials.username,
       password: credentials.password,
@@ -38,13 +60,30 @@ export class Gab extends ConversationV1 {
     this.intents = intents;
     this.entities = entities;
     this.logger = logger;
+
+    this.maxStatusPollCount = maxStatusPollCount;
+    this.statusPollRate = statusPollRate;
+  }
+
+  getWorkspaceStatus() {
+    return new Promise((resolve, reject) => {
+      this.getWorkspace({
+        workspace_id: this.credentials.workspaceId,
+      }, (err, data: { status: string }) => {
+        if (err) {
+          return reject(err);
+        }
+
+        return resolve(data.status.toUpperCase());
+      });
+    });
   }
 
   // apply the current routes, intents, entities, etc
   // to watson - this will wait until Watson is done training and then
   // resolve
   applyChanges() {
-    const dialog_nodes = createDialogTree(this.routes);
+    const parsedDialogTree = createDialogTree(this.routes);
     const parsedIntents = createIntents(this.intents);
     const parsedEntities = createEntities(this.entities);
 
@@ -55,56 +94,43 @@ export class Gab extends ConversationV1 {
         workspace_id: this.credentials.workspaceId,
         name: this.workspaceName,
         description: '',
-        dialog_nodes,
+        dialog_nodes: parsedDialogTree,
         intents: parsedIntents,
         entities: parsedEntities,
       }, async (err) => {
         if (!err) {
-          /* istanbul ignore next */
           if (this.logger) {
             this.logger.log('Done with initialization.');
           }
-          
-          let step = 0;
-          while(true) {
-            await timeout(1000);
-            step = step + 1 > 3 ? 0 : step + 1;
-            const dots = '.'.repeat(step);
-            const status = await new Promise(rs => {
-              this.getWorkspace({
-                workspace_id: this.credentials.workspaceId,
-              }, (err, data: { status: string }) => {
-                if (err) {
-                  return reject(err);
-                }
 
-                return rs(data.status.toUpperCase());
-              });
-            });
-
-            switch(status) {
-              case 'TRAINING': {
-                /* istanbul ignore next */
-                if (this.logger) {
-                  this.logger.log(`Training${dots}`);
+          for (let pollCount = 0; pollCount < this.maxStatusPollCount; pollCount++) {
+            try {
+              const status = await this.getWorkspaceStatus();
+              switch (status) {
+                case 'TRAINING': {
+                  if (this.logger) {
+                    this.logger.log('Training...');
+                  }
+                  break;
                 }
-                break;
-              }
-              case 'AVAILABLE': {
-                /* istanbul ignore next */
-                if (this.logger) {
-                  this.logger.log('Done training.');
+                case 'AVAILABLE': {
+                  if (this.logger) {
+                    this.logger.log('Done training.');
+                  }
+                  return resolve();
                 }
-                return resolve();
-              }
-              default: {
-                /* istanbul ignore next */
-                if (this.logger) {
-                  this.logger.error('unhandled', status);
+                default: {
+                  if (this.logger) {
+                    this.logger.error('unhandled', status);
+                  }
+                  return reject(new Error(`unhandled app status ${status}`));
                 }
-                return reject(new Error(`unhandled app status ${status}`));
               }
+            } catch (e) {
+              return reject(e);
             }
+
+            await timeout(1000);
           }
         } else {
           return reject(err);
@@ -120,30 +146,30 @@ export class Gab extends ConversationV1 {
         input: { text: msg },
         workspace_id: this.credentials.workspaceId,
       }, (err, response) => {
-          if (err) {
-            return reject(err);
+        if (err) {
+          return reject(err);
+        }
+
+        this.contexts.set(response.context.conversation_id, response.context);
+
+        if (response.output && response.output.values && response.output.values.length > 0) {
+          const { template: templateId } = response.output.values[0];
+
+          if (!templateId) {
+            return reject(new Error('No template specified'));
           }
 
-          this.contexts.set(response.context.conversation_id, response.context);
+          const template = this.handlers.get(templateId);
 
-          if (response.output && response.output.values && response.output.values.length > 0) {
-            const { template: templateId } = response.output.values[0];
-
-            if (!templateId) {
-              return reject(new Error('No template specified'));
-            }
-
-            const template = this.handlers.get(templateId);
-
-            if (!template) {
-              return reject(new Error(`${templateId} has not been setup.`));
-            }
-
-            return resolve(template({ raw: response, context: response.context }));
-          } else {
-            console.log(response);
-            throw new Error('incorrect output received.');
+          if (!template) {
+            return reject(new Error(`${templateId} has not been setup.`));
           }
+
+          return resolve(template({ raw: response, context: response.context }));
+        } else {
+          console.log(response);
+          throw new Error('incorrect output received.');
+        }
       });
     });
   }
