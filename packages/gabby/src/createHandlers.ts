@@ -12,6 +12,9 @@ export default function createHandlers(routes: IRoutes) {
     children.forEach(child => recurse(child));
   }
 
-  recurse(routes);
+  if (routes) {
+    recurse(routes);
+  }
+
   return tree;
 }

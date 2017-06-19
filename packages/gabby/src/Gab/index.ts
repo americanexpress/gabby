@@ -63,6 +63,7 @@ export class Gab extends ConversationV1 {
 
     this.maxStatusPollCount = maxStatusPollCount;
     this.statusPollRate = statusPollRate;
+    this.handlers = createHandlers(this.routes);
   }
 
   getWorkspaceStatus() {
@@ -140,6 +141,10 @@ export class Gab extends ConversationV1 {
   }
 
   sendMessage(msg: string, to?: string) {
+    if (!this.routes) {
+      return Promise.reject(new Error('No routes specified'));
+    }
+
     return new Promise((resolve, reject) => {
       this.message({
         context: this.contexts.get(to) || {},
@@ -167,8 +172,14 @@ export class Gab extends ConversationV1 {
 
           return resolve(template({ raw: response, context: response.context }));
         } else {
-          console.log(response);
-          throw new Error('incorrect output received.');
+          if (this.logger) {
+            // tslint:disable-next-line:max-line-length
+            this.logger.warn(
+              `Got unexpected response output from watson: ${JSON.stringify(response.output, null, 2)}`,
+            );
+          }
+
+          return reject(new Error('Incorrect output received'));
         }
       });
     });

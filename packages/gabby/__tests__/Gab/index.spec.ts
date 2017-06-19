@@ -275,4 +275,187 @@ describe('Gab', () => {
       });
     });
   });
+
+  describe('send message', () => {
+    it('should send message to watson', () => {
+      const routes: IRoutes = {
+        name: 'test',
+        when: '#testing',
+        handler: () => 'template response',
+        children: [],
+      };
+
+      const client = <MockedGab>new Gab({
+        routes,
+        name: 'test',
+        credentials: {
+          username: 'test',
+          password: 'test',
+          workspaceId: 'test',
+        },
+      });
+
+      client.mock('message', (data, cb) => {
+        cb(null, {
+          context: {
+            conversation_id: '123',
+          },
+          output: {
+            values: [
+              { template: 'test' },
+            ],
+          },
+        });
+      });
+
+      return client.sendMessage('test').then((res) => {
+        expect(res).toBe('template response');
+      });
+    });
+
+    it('should reject with error if routes have not been supplied', () => {
+      const client = <MockedGab>new Gab({
+        name: 'test',
+        credentials: {
+          username: 'test',
+          password: 'test',
+          workspaceId: 'test',
+        },
+      });
+
+      return client.sendMessage('test').catch((err) => {
+        expect(err).toBeTruthy();
+      });
+    });
+
+    it('should reject with error if watson returns error', () => {
+      const routes: IRoutes = {
+        name: 'test',
+        when: '#testing',
+        handler: () => 'template response',
+        children: [],
+      };
+
+      const client = <MockedGab>new Gab({
+        routes,
+        name: 'test',
+        credentials: {
+          username: 'test',
+          password: 'test',
+          workspaceId: 'test',
+        },
+      });
+
+      client.mock('message', (data, cb) => {
+        cb('watson error');
+      });
+
+      return client.sendMessage('test').catch((err) => {
+        expect(err).toBe('watson error');
+      });
+    });
+
+    it('should reject with error if watson returns unexpected output', () => {
+      const routes: IRoutes = {
+        name: 'test',
+        when: '#testing',
+        handler: () => 'template response',
+        children: [],
+      };
+
+      const client = <MockedGab>new Gab({
+        routes,
+        name: 'test',
+        credentials: {
+          username: 'test',
+          password: 'test',
+          workspaceId: 'test',
+        },
+      });
+
+      client.mock('message', (data, cb) => {
+        cb(null, {
+          context: {
+            conversation_id: '123',
+          },
+        });
+      });
+
+      return client.sendMessage('test').catch((err) => {
+        expect(err.message).toBe('Incorrect output received');
+      });
+    });
+
+    it('should reject with error if watson response doesn\'t contain a template id', () => {
+      const routes: IRoutes = {
+        name: 'test',
+        when: '#testing',
+        handler: () => 'template response',
+        children: [],
+      };
+
+      const client = <MockedGab>new Gab({
+        routes,
+        name: 'test',
+        credentials: {
+          username: 'test',
+          password: 'test',
+          workspaceId: 'test',
+        },
+      });
+
+      client.mock('message', (data, cb) => {
+        cb(null, {
+          context: {
+            conversation_id: '123',
+          },
+          output: {
+            values: [
+              {},
+            ],
+          },
+        });
+      });
+
+      return client.sendMessage('test').catch((err) => {
+        expect(err.message).toBe('No template specified');
+      });
+    });
+
+    it('should reject with error if template handler cannot be found', () => {
+      const routes: IRoutes = {
+        name: 'test',
+        when: '#testing',
+        handler: () => 'template response',
+        children: [],
+      };
+
+      const client = <MockedGab>new Gab({
+        routes,
+        name: 'test',
+        credentials: {
+          username: 'test',
+          password: 'test',
+          workspaceId: 'test',
+        },
+      });
+
+      client.mock('message', (data, cb) => {
+        cb(null, {
+          context: {
+            conversation_id: '123',
+          },
+          output: {
+            values: [
+              { template: 'noexist' },
+            ],
+          },
+        });
+      });
+
+      return client.sendMessage('test').catch((err) => {
+        expect(err.message).toBe('noexist has not been setup.');
+      });
+    });
+  });
 });
