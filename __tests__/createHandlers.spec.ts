@@ -15,7 +15,7 @@ describe('Create handlers', () => {
           name: 'accept terms',
           when: '#accept_terms',
           handler: acceptTermsHandler,
-          children: []
+          children: [],
         },
       ],
     };

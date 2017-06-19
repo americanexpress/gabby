@@ -19,7 +19,7 @@ export type IIntents = IIntent[];
 export interface IEntityValue {
   name: string;
   synonyms: string[];
-};
+}
 
 export interface IEntity {
   name: string;
@@ -50,6 +50,8 @@ export interface IWatsonProps {
   credentials: IWatsonCredentials;
   name?: string;
   logger?: ILogger;
+  maxStatusPollCount?: number;
+  statusPollRate?: number;
 }
 
 export type IHandlers = Map<string, Function>;

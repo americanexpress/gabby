@@ -1,4 +1,4 @@
-import Gab from '../../src/watson/index';
+import Gab from '../../src/Gab';
 import { IRoutes, IIntents, IEntities } from '../../src/interfaces';
 
 interface MockedGab extends Gab {
@@ -115,14 +115,14 @@ describe('Gab', () => {
     ];
 
     const client = new Gab({
+      intents,
+      entities,
       name: 'test',
       credentials: {
         username: 'test',
         password: 'test',
         workspaceId: 'test',
       },
-      intents,
-      entities,
     });
 
     expect(client.getWorkspaceName()).toEqual('test');
@@ -140,13 +140,13 @@ describe('Gab', () => {
       };
 
       const client = <MockedGab>new Gab({
+        routes,
         name: 'test',
         credentials: {
           username: 'test',
           password: 'test',
           workspaceId: 'test',
         },
-        routes,
       });
 
       client.mock('updateWorkspace', (data, cb) => {
@@ -178,13 +178,13 @@ describe('Gab', () => {
       };
 
       const client = <MockedGab>new Gab({
+        routes,
         name: 'test',
         credentials: {
           username: 'test',
           password: 'test',
           workspaceId: 'test',
         },
-        routes,
       });
 
       client.mock('updateWorkspace', (data, cb) => {
@@ -215,20 +215,19 @@ describe('Gab', () => {
       };
 
       const client = <MockedGab>new Gab({
+        routes,
         name: 'test',
         credentials: {
           username: 'test',
           password: 'test',
           workspaceId: 'test',
         },
-        routes,
       });
 
       client.mock('updateWorkspace', (data, cb) => {
         cb(null, {});
       });
 
-      let calls = 0;
       client.mock('getWorkspace', (data, cb) => {
         return cb('getWorkspace Error', {});
       });
@@ -248,13 +247,13 @@ describe('Gab', () => {
       };
 
       const client = <MockedGab>new Gab({
+        routes,
         name: 'test',
         credentials: {
           username: 'test',
           password: 'test',
           workspaceId: 'test',
         },
-        routes,
       });
 
       client.mock('updateWorkspace', (data, cb) => {

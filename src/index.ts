@@ -1,8 +1,8 @@
-import Watson from './watson';
+import Gab from './Gab';
 import parseReactRoutes from './parseReactRoutes';
 
 export {
   parseReactRoutes,
 };
 
-export default Watson;
+export default Gab;
