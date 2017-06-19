@@ -52,7 +52,6 @@ var createEntities_1 = require("../createEntities");
 // create a map of handlers
 var createHandlers_1 = require("../createHandlers");
 function timeout(ms) {
-    if (ms === void 0) { ms = 1000; }
     return new Promise(function (resolve) { return setTimeout(resolve, ms); });
 }
 var Gab = (function (_super) {
@@ -75,12 +74,25 @@ var Gab = (function (_super) {
         _this.statusPollRate = statusPollRate;
         return _this;
     }
+    Gab.prototype.getWorkspaceStatus = function () {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            _this.getWorkspace({
+                workspace_id: _this.credentials.workspaceId,
+            }, function (err, data) {
+                if (err) {
+                    return reject(err);
+                }
+                return resolve(data.status.toUpperCase());
+            });
+        });
+    };
     // apply the current routes, intents, entities, etc
     // to watson - this will wait until Watson is done training and then
     // resolve
     Gab.prototype.applyChanges = function () {
         var _this = this;
-        var dialog_nodes = createDialogTree_1.default(this.routes);
+        var parsedDialogTree = createDialogTree_1.default(this.routes);
         var parsedIntents = createIntents_1.default(this.intents);
         var parsedEntities = createEntities_1.default(this.entities);
         this.handlers = createHandlers_1.default(this.routes);
@@ -89,69 +101,62 @@ var Gab = (function (_super) {
                 workspace_id: _this.credentials.workspaceId,
                 name: _this.workspaceName,
                 description: '',
-                dialog_nodes: dialog_nodes,
+                dialog_nodes: parsedDialogTree,
                 intents: parsedIntents,
                 entities: parsedEntities,
             }, function (err) { return __awaiter(_this, void 0, void 0, function () {
-                var _this = this;
-                var pollCount, status_1;
+                var pollCount, status_1, e_1;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
-                            if (!!err) return [3 /*break*/, 6];
-                            /* istanbul ignore next */
+                            if (!!err) return [3 /*break*/, 9];
                             if (this.logger) {
                                 this.logger.log('Done with initialization.');
                             }
                             pollCount = 0;
                             _a.label = 1;
                         case 1:
-                            if (!(pollCount < this.maxStatusPollCount)) return [3 /*break*/, 5];
-                            return [4 /*yield*/, timeout(1000)];
+                            if (!(pollCount < this.maxStatusPollCount)) return [3 /*break*/, 8];
+                            _a.label = 2;
                         case 2:
-                            _a.sent();
-                            return [4 /*yield*/, new Promise(function (rs) {
-                                    _this.getWorkspace({
-                                        workspace_id: _this.credentials.workspaceId,
-                                    }, function (err, data) {
-                                        if (err) {
-                                            return reject(err);
-                                        }
-                                        return rs(data.status.toUpperCase());
-                                    });
-                                })];
+                            _a.trys.push([2, 4, , 5]);
+                            return [4 /*yield*/, this.getWorkspaceStatus()];
                         case 3:
                             status_1 = _a.sent();
                             switch (status_1) {
                                 case 'TRAINING': {
-                                    /* istanbul ignore next */
                                     if (this.logger) {
                                         this.logger.log('Training...');
                                     }
                                     break;
                                 }
                                 case 'AVAILABLE': {
-                                    /* istanbul ignore next */
                                     if (this.logger) {
                                         this.logger.log('Done training.');
                                     }
                                     return [2 /*return*/, resolve()];
                                 }
                                 default: {
-                                    /* istanbul ignore next */
                                     if (this.logger) {
                                         this.logger.error('unhandled', status_1);
                                     }
                                     return [2 /*return*/, reject(new Error("unhandled app status " + status_1))];
                                 }
                             }
-                            _a.label = 4;
+                            return [3 /*break*/, 5];
                         case 4:
+                            e_1 = _a.sent();
+                            return [2 /*return*/, reject(e_1)];
+                        case 5: return [4 /*yield*/, timeout(1000)];
+                        case 6:
+                            _a.sent();
+                            _a.label = 7;
+                        case 7:
                             pollCount++;
                             return [3 /*break*/, 1];
-                        case 5: return [3 /*break*/, 7];
-                        case 6: return [2 /*return*/, reject(err)];
-                        case 7: return [2 /*return*/];
+                        case 8: return [3 /*break*/, 10];
+                        case 9: return [2 /*return*/, reject(err)];
+                        case 10: return [2 /*return*/];
                     }
                 });
             }); });
