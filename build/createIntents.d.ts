@@ -1,4 +1,4 @@
-import { IIntents } from "./interfaces";
+import { IIntents } from './interfaces';
 export default function createEntity(intents: IIntents): {
     intent: string;
     examples: {
