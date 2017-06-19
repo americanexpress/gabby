@@ -72,6 +72,7 @@ var Gab = (function (_super) {
         _this.logger = logger;
         _this.maxStatusPollCount = maxStatusPollCount;
         _this.statusPollRate = statusPollRate;
+        _this.handlers = createHandlers_1.default(_this.routes);
         return _this;
     }
     Gab.prototype.getWorkspaceStatus = function () {
@@ -164,6 +165,9 @@ var Gab = (function (_super) {
     };
     Gab.prototype.sendMessage = function (msg, to) {
         var _this = this;
+        if (!this.routes) {
+            return Promise.reject(new Error('No routes specified'));
+        }
         return new Promise(function (resolve, reject) {
             _this.message({
                 context: _this.contexts.get(to) || {},
@@ -186,8 +190,11 @@ var Gab = (function (_super) {
                     return resolve(template({ raw: response, context: response.context }));
                 }
                 else {
-                    console.log(response);
-                    throw new Error('incorrect output received.');
+                    if (_this.logger) {
+                        // tslint:disable-next-line:max-line-length
+                        _this.logger.warn("Got unexpected response output from watson: " + JSON.stringify(response.output, null, 2));
+                    }
+                    return reject(new Error('Incorrect output received'));
                 }
             });
         });
