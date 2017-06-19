@@ -1,4 +1,4 @@
-import createIntents from "../src/createIntents";
+import createIntents from '../src/createIntents';
 
 describe('Create intents', () => {
   it('should return valid watson structure', () => {

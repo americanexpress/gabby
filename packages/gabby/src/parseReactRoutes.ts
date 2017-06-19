@@ -12,7 +12,7 @@ export default function parseReactRoutes(routes): IRoutes {
   const tree = {};
 
   function recurse(node, prevNode?, namespace?) {
-    let nextNodes = [].concat(node.props.children).filter(Boolean);
+    const nextNodes = [].concat(node.props.children).filter(Boolean);
     const { name, when, to, component, namespace: ns } = node.props;
 
     let namespacedName = `${namespace}.${name}`;
@@ -21,11 +21,11 @@ export default function parseReactRoutes(routes): IRoutes {
     }
 
     return {
-      name: name && namespacedName,
       when,
       to,
+      name: name && namespacedName,
       handler: component,
-      children: nextNodes.map(n => recurse(n, node, ns ? getNS(namespace, ns) : namespace))
+      children: nextNodes.map(n => recurse(n, node, ns ? getNS(namespace, ns) : namespace)),
     };
   }
 

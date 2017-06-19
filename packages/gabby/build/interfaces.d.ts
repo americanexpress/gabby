@@ -41,5 +41,7 @@ export interface IWatsonProps {
     credentials: IWatsonCredentials;
     name?: string;
     logger?: ILogger;
+    maxStatusPollCount: number;
+    statusPollRate: number;
 }
 export declare type IHandlers = Map<string, Function>;

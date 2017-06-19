@@ -97,7 +97,7 @@ describe('Create dialog tree', () => {
           selection_policy: 'sequential',
         },
         parent: null,
-        previous_sibling: 'mocked.Select Plan'
+        previous_sibling: 'mocked.Select Plan',
       },
       {
         dialog_node: 'mocked.Help',
@@ -113,7 +113,7 @@ describe('Create dialog tree', () => {
         },
         parent: null,
         previous_sibling: 'mocked.Goodbye',
-      }
+      },
     ]);
   });
 
