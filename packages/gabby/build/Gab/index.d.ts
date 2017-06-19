@@ -12,6 +12,7 @@ export declare class Gab extends ConversationV1 {
     private statusPollRate;
     private contexts;
     constructor({name, credentials, routes, intents, entities, logger, maxStatusPollCount, statusPollRate}: IWatsonProps);
+    getWorkspaceStatus(): Promise<{}>;
     applyChanges(): Promise<{}>;
     sendMessage(msg: string, to?: string): Promise<{}>;
     getWorkspaceName(): string;

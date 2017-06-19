@@ -20,10 +20,10 @@ function createDialogTree(routes) {
                 // no output if we're redirecting
                 output: to ? {} : {
                     values: [
-                        { template: name_1 }
+                        { template: name_1 },
                     ],
                     // TODO: Make this configurable
-                    selection_policy: 'sequential'
+                    selection_policy: 'sequential',
                 },
                 conditions: when || null,
                 parent: (prevNode && prevNode.name) ? prevNode.name : null,

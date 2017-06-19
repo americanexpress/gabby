@@ -16,11 +16,11 @@ function parseReactRoutes(routes) {
             namespacedName = name;
         }
         return {
-            name: name && namespacedName,
             when: when,
             to: to,
+            name: name && namespacedName,
             handler: component,
-            children: nextNodes.map(function (n) { return recurse(n, node, ns ? getNS(namespace, ns) : namespace); })
+            children: nextNodes.map(function (n) { return recurse(n, node, ns ? getNS(namespace, ns) : namespace); }),
         };
     }
     return recurse(routes);
