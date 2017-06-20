@@ -131,7 +131,7 @@ export class Gab extends ConversationV1 {
               return reject(e);
             }
 
-            await timeout(1000);
+            await timeout(this.statusPollRate);
           }
         } else {
           return reject(err);
