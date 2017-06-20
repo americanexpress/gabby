@@ -177,7 +177,8 @@ var Gab = (function (_super) {
                 if (err) {
                     return reject(err);
                 }
-                _this.contexts.set(response.context.conversation_id, response.context);
+                var conversationId = response.context.conversation_id;
+                _this.contexts.set(conversationId, response.context);
                 if (response.output && response.output.values && response.output.values.length > 0) {
                     var templateId = response.output.values[0].template;
                     if (!templateId) {
@@ -187,7 +188,10 @@ var Gab = (function (_super) {
                     if (!template) {
                         return reject(new Error(templateId + " has not been setup."));
                     }
-                    return resolve(template({ raw: response, context: response.context }));
+                    return resolve({
+                        conversationId: conversationId,
+                        msg: template({ raw: response, context: response.context }),
+                    });
                 }
                 else {
                     if (_this.logger) {
