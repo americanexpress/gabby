@@ -147,6 +147,7 @@ describe('Gab', () => {
           password: 'test',
           workspaceId: 'test',
         },
+        statusPollRate: 1,
       });
 
       client.mock('updateWorkspace', (data, cb) => {
@@ -309,7 +310,10 @@ describe('Gab', () => {
       });
 
       return client.sendMessage('test').then((res) => {
-        expect(res).toBe('template response');
+        expect(res).toEqual({
+          conversationId: '123',
+          msg: 'template response',
+        });
       });
     });
 

@@ -155,7 +155,9 @@ export class Gab extends ConversationV1 {
           return reject(err);
         }
 
-        this.contexts.set(response.context.conversation_id, response.context);
+        const conversationId = response.context.conversation_id;
+
+        this.contexts.set(conversationId, response.context);
 
         if (response.output && response.output.values && response.output.values.length > 0) {
           const { template: templateId } = response.output.values[0];
@@ -170,7 +172,10 @@ export class Gab extends ConversationV1 {
             return reject(new Error(`${templateId} has not been setup.`));
           }
 
-          return resolve(template({ raw: response, context: response.context }));
+          return resolve({
+            conversationId,
+            msg: template({ raw: response, context: response.context }),
+          });
         } else {
           if (this.logger) {
             // tslint:disable-next-line:max-line-length
