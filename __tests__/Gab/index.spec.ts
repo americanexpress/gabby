@@ -296,21 +296,24 @@ describe('Gab', () => {
         },
       });
 
+      const response = {
+        context: {
+          conversation_id: '123',
+        },
+        output: {
+          values: [
+            { template: 'test' },
+          ],
+        },
+      };
+
       client.mock('message', (data, cb) => {
-        cb(null, {
-          context: {
-            conversation_id: '123',
-          },
-          output: {
-            values: [
-              { template: 'test' },
-            ],
-          },
-        });
+        cb(null, response);
       });
 
       return client.sendMessage('test').then((res) => {
         expect(res).toEqual({
+          response,
           conversationId: '123',
           msg: 'template response',
         });
