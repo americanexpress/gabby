@@ -189,8 +189,9 @@ var Gab = (function (_super) {
                         return reject(new Error(templateId + " has not been setup."));
                     }
                     return resolve({
+                        response: response,
                         conversationId: conversationId,
-                        msg: template({ raw: response, context: response.context }),
+                        msg: template({ response: response, context: response.context }),
                     });
                 }
                 else {

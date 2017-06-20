@@ -173,8 +173,9 @@ export class Gab extends ConversationV1 {
           }
 
           return resolve({
+            response,
             conversationId,
-            msg: template({ raw: response, context: response.context }),
+            msg: template({ response, context: response.context }),
           });
         } else {
           if (this.logger) {
