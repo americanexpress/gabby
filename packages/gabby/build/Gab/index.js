@@ -148,7 +148,7 @@ var Gab = (function (_super) {
                         case 4:
                             e_1 = _a.sent();
                             return [2 /*return*/, reject(e_1)];
-                        case 5: return [4 /*yield*/, timeout(1000)];
+                        case 5: return [4 /*yield*/, timeout(this.statusPollRate)];
                         case 6:
                             _a.sent();
                             _a.label = 7;
