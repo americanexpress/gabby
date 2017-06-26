@@ -173,35 +173,42 @@ var Gab = (function (_super) {
                 context: _this.contexts.get(to) || {},
                 input: { text: msg },
                 workspace_id: _this.credentials.workspaceId,
-            }, function (err, response) {
-                if (err) {
-                    return reject(err);
-                }
-                var conversationId = response.context.conversation_id;
-                _this.contexts.set(conversationId, response.context);
-                if (response.output && response.output.values && response.output.values.length > 0) {
-                    var templateId = response.output.values[0].template;
-                    if (!templateId) {
-                        return reject(new Error('No template specified'));
+            }, function (err, response) { return __awaiter(_this, void 0, void 0, function () {
+                var conversationId, templateId, template_1, msg_1;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            if (err) {
+                                return [2 /*return*/, reject(err)];
+                            }
+                            conversationId = response.context.conversation_id;
+                            this.contexts.set(conversationId, response.context);
+                            if (!(response.output && response.output.values && response.output.values.length > 0)) return [3 /*break*/, 2];
+                            templateId = response.output.values[0].template;
+                            if (!templateId) {
+                                return [2 /*return*/, reject(new Error('No template specified'))];
+                            }
+                            template_1 = this.handlers.get(templateId);
+                            if (!template_1) {
+                                return [2 /*return*/, reject(new Error(templateId + " has not been setup."))];
+                            }
+                            return [4 /*yield*/, new Promise(function (res) { return res(template_1({ response: response, context: response.context })); })];
+                        case 1:
+                            msg_1 = _a.sent();
+                            return [2 /*return*/, resolve({
+                                    msg: msg_1,
+                                    response: response,
+                                    conversationId: conversationId,
+                                })];
+                        case 2:
+                            if (this.logger) {
+                                // tslint:disable-next-line:max-line-length
+                                this.logger.warn("Got unexpected response output from watson: " + JSON.stringify(response.output, null, 2));
+                            }
+                            return [2 /*return*/, reject(new Error('Incorrect output received'))];
                     }
-                    var template = _this.handlers.get(templateId);
-                    if (!template) {
-                        return reject(new Error(templateId + " has not been setup."));
-                    }
-                    return resolve({
-                        response: response,
-                        conversationId: conversationId,
-                        msg: template({ response: response, context: response.context }),
-                    });
-                }
-                else {
-                    if (_this.logger) {
-                        // tslint:disable-next-line:max-line-length
-                        _this.logger.warn("Got unexpected response output from watson: " + JSON.stringify(response.output, null, 2));
-                    }
-                    return reject(new Error('Incorrect output received'));
-                }
-            });
+                });
+            }); });
         });
     };
     Gab.prototype.getWorkspaceName = function () {

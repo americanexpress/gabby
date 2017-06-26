@@ -150,7 +150,7 @@ export class Gab extends ConversationV1 {
         context: this.contexts.get(to) || {},
         input: { text: msg },
         workspace_id: this.credentials.workspaceId,
-      }, (err, response) => {
+      }, async (err, response) => {
         if (err) {
           return reject(err);
         }
@@ -172,10 +172,15 @@ export class Gab extends ConversationV1 {
             return reject(new Error(`${templateId} has not been setup.`));
           }
 
+          // handle promises as well as non-promise values
+          const msg = await new Promise(res => res(
+            template({ response, context: response.context }),
+          ));
+
           return resolve({
+            msg,
             response,
             conversationId,
-            msg: template({ response, context: response.context }),
           });
         } else {
           if (this.logger) {
