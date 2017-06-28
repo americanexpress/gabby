@@ -54,9 +54,9 @@ var createHandlers_1 = require("../createHandlers");
 function timeout(ms) {
     return new Promise(function (resolve) { return setTimeout(resolve, ms); });
 }
-var Gab = (function (_super) {
-    __extends(Gab, _super);
-    function Gab(_a) {
+var Gabby = (function (_super) {
+    __extends(Gabby, _super);
+    function Gabby(_a) {
         var _b = _a.name, name = _b === void 0 ? '' : _b, credentials = _a.credentials, routes = _a.routes, _c = _a.intents, intents = _c === void 0 ? [] : _c, _d = _a.entities, entities = _d === void 0 ? [] : _d, logger = _a.logger, _e = _a.maxStatusPollCount, maxStatusPollCount = _e === void 0 ? 30 : _e, _f = _a.statusPollRate, statusPollRate = _f === void 0 ? 3000 : _f;
         var _this = _super.call(this, {
             username: credentials.username,
@@ -75,7 +75,7 @@ var Gab = (function (_super) {
         _this.handlers = createHandlers_1.default(_this.routes);
         return _this;
     }
-    Gab.prototype.getWorkspaceStatus = function () {
+    Gabby.prototype.getWorkspaceStatus = function () {
         var _this = this;
         return new Promise(function (resolve, reject) {
             _this.getWorkspace({
@@ -91,7 +91,7 @@ var Gab = (function (_super) {
     // apply the current routes, intents, entities, etc
     // to watson - this will wait until Watson is done training and then
     // resolve
-    Gab.prototype.applyChanges = function () {
+    Gabby.prototype.applyChanges = function () {
         var _this = this;
         var parsedDialogTree = createDialogTree_1.default(this.routes);
         var parsedIntents = createIntents_1.default(this.intents);
@@ -163,7 +163,7 @@ var Gab = (function (_super) {
             }); });
         });
     };
-    Gab.prototype.sendMessage = function (msg, to) {
+    Gabby.prototype.sendMessage = function (msg, to) {
         var _this = this;
         if (!this.routes) {
             return Promise.reject(new Error('No routes specified'));
@@ -211,31 +211,31 @@ var Gab = (function (_super) {
             }); });
         });
     };
-    Gab.prototype.getWorkspaceName = function () {
+    Gabby.prototype.getWorkspaceName = function () {
         return this.workspaceName;
     };
-    Gab.prototype.getRoutes = function () {
+    Gabby.prototype.getRoutes = function () {
         return this.routes;
     };
-    Gab.prototype.setRoutes = function (routes) {
+    Gabby.prototype.setRoutes = function (routes) {
         this.routes = routes;
         return this;
     };
-    Gab.prototype.getIntents = function () {
+    Gabby.prototype.getIntents = function () {
         return this.intents;
     };
-    Gab.prototype.setIntents = function (intents) {
+    Gabby.prototype.setIntents = function (intents) {
         this.intents = intents;
         return this;
     };
-    Gab.prototype.getEntities = function () {
+    Gabby.prototype.getEntities = function () {
         return this.entities;
     };
-    Gab.prototype.setEntities = function (entities) {
+    Gabby.prototype.setEntities = function (entities) {
         this.entities = entities;
         return this;
     };
-    return Gab;
+    return Gabby;
 }(watson_developer_cloud_1.ConversationV1));
-exports.Gab = Gab;
-exports.default = Gab;
+exports.Gabby = Gabby;
+exports.default = Gabby;

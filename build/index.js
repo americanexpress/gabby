@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var Gab_1 = require("./Gab");
+var Gabby_1 = require("./Gabby");
 var parseReactRoutes_1 = require("./parseReactRoutes");
 exports.parseReactRoutes = parseReactRoutes_1.default;
 var Root_1 = require("./components/Root");
@@ -9,4 +9,4 @@ var Route_1 = require("./components/Route");
 exports.Route = Route_1.default;
 var Redirect_1 = require("./components/Redirect");
 exports.Redirect = Redirect_1.default;
-exports.default = Gab_1.default;
+exports.default = Gabby_1.default;
