@@ -1,13 +1,13 @@
-import Gab from '../../src/Gab';
+import Gabby from '../../src/Gabby';
 import { IRoutes, IIntents, IEntities } from '../../src/interfaces';
 
-interface MockedGab extends Gab {
+interface MockedGabby extends Gabby {
   mock: Function;
 }
 
-describe('Gab', () => {
+describe('Gabby', () => {
   it('should set routes', () => {
-    const client = new Gab({
+    const client = new Gabby({
       name: 'test',
       credentials: {
         username: 'test',
@@ -28,7 +28,7 @@ describe('Gab', () => {
   });
 
   it('should set intents', () => {
-    const client = new Gab({
+    const client = new Gabby({
       name: 'test',
       credentials: {
         username: 'test',
@@ -50,7 +50,7 @@ describe('Gab', () => {
   });
 
   it('should set entities', () => {
-    const client = new Gab({
+    const client = new Gabby({
       name: 'test',
       credentials: {
         username: 'test',
@@ -78,7 +78,7 @@ describe('Gab', () => {
   });
 
   it('should use defaults for intents, entities, and name if not supplied', () => {
-    const client = new Gab({
+    const client = new Gabby({
       credentials: {
         username: 'test',
         password: 'test',
@@ -114,7 +114,7 @@ describe('Gab', () => {
       },
     ];
 
-    const client = new Gab({
+    const client = new Gabby({
       intents,
       entities,
       name: 'test',
@@ -139,7 +139,7 @@ describe('Gab', () => {
         children: [],
       };
 
-      const client = <MockedGab>new Gab({
+      const client = <MockedGabby>new Gabby({
         routes,
         name: 'test',
         credentials: {
@@ -178,7 +178,7 @@ describe('Gab', () => {
         children: [],
       };
 
-      const client = <MockedGab>new Gab({
+      const client = <MockedGabby>new Gabby({
         routes,
         name: 'test',
         credentials: {
@@ -215,7 +215,7 @@ describe('Gab', () => {
         children: [],
       };
 
-      const client = <MockedGab>new Gab({
+      const client = <MockedGabby>new Gabby({
         routes,
         name: 'test',
         credentials: {
@@ -247,7 +247,7 @@ describe('Gab', () => {
         children: [],
       };
 
-      const client = <MockedGab>new Gab({
+      const client = <MockedGabby>new Gabby({
         routes,
         name: 'test',
         credentials: {
@@ -286,7 +286,7 @@ describe('Gab', () => {
         children: [],
       };
 
-      const client = <MockedGab>new Gab({
+      const client = <MockedGabby>new Gabby({
         routes,
         name: 'test',
         credentials: {
@@ -321,7 +321,7 @@ describe('Gab', () => {
     });
 
     it('should reject with error if routes have not been supplied', () => {
-      const client = <MockedGab>new Gab({
+      const client = <MockedGabby>new Gabby({
         name: 'test',
         credentials: {
           username: 'test',
@@ -343,7 +343,7 @@ describe('Gab', () => {
         children: [],
       };
 
-      const client = <MockedGab>new Gab({
+      const client = <MockedGabby>new Gabby({
         routes,
         name: 'test',
         credentials: {
@@ -370,7 +370,7 @@ describe('Gab', () => {
         children: [],
       };
 
-      const client = <MockedGab>new Gab({
+      const client = <MockedGabby>new Gabby({
         routes,
         name: 'test',
         credentials: {
@@ -401,7 +401,7 @@ describe('Gab', () => {
         children: [],
       };
 
-      const client = <MockedGab>new Gab({
+      const client = <MockedGabby>new Gabby({
         routes,
         name: 'test',
         credentials: {
@@ -437,7 +437,7 @@ describe('Gab', () => {
         children: [],
       };
 
-      const client = <MockedGab>new Gab({
+      const client = <MockedGabby>new Gabby({
         routes,
         name: 'test',
         credentials: {

@@ -1,4 +1,4 @@
-import Gab from '../src/Gab';
+import Gabby from '../src/Gabby';
 import parseReactRoutes from '../src/parseReactRoutes';
 import Root from '../src/components/Root';
 import Route from '../src/components/Route';
@@ -13,7 +13,7 @@ describe('Index', () => {
       Root,
       Route,
       Redirect,
-      default: Gab,
+      default: Gabby,
     });
   });
 });
