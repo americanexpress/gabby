@@ -5,97 +5,97 @@ Gabby provides a way to interface with several chatbot providers. Currently we s
 Many services provide a user interface for creating your chatbot but when you start to bring more developers into the picture it starts to fall apart. Gabby provides a way to have your chatbot be code/config driven as well as platform agnostic. Having your chatbot as code/config also allows you to version it using source control which makes upgrades and rollbacks a breeze.
  
 # Examples
-Without JSX config
+### Without JSX config:
 ```javascript
-  import Gabby from 'gabby';
+import Gabby from 'gabby';
 
-  const routes = {
-    children: [
-      {
-        name: 'hello',
-        when: '#greeting',
-        handler: Hello,
-        children: [],
-      },
-      {
-        name: 'goodbye',
-        when: '#farewell',
-        handler: Goodbye,
-        children: [],
-      }
-    ],
-  };
-
-  const gabby = new Gabby({
-    name: 'my sweet chatbot',
-    credentials: {
-      username: 'xxx',
-      password: 'xxx',
-      workspaceId: 'xxx'
+const routes = {
+  children: [
+    {
+      name: 'hello',
+      when: '#greeting',
+      handler: Hello,
+      children: [],
     },
-    routes,
-    intents: [
-      {
-        name: 'greeting',
-        phrases: ['hello', 'hi', 'what\'s up'],
-      },
-      {
-        name: 'farewell',
-        phrases: ['goodbye', 'bye', 'see you tomorrow'],
-      },
-    ],
-    logger: console
-  });
+    {
+      name: 'goodbye',
+      when: '#farewell',
+      handler: Goodbye,
+      children: [],
+    }
+  ],
+};
 
-  gabby.applyChanges()
-    .then(() => {
-      console.log('all ready to go!');
-      const { msg } = await gabby.sendMessage('hello');
-      // send msg to user
-    });
+const gabby = new Gabby({
+  name: 'my sweet chatbot',
+  credentials: {
+    username: 'xxx',
+    password: 'xxx',
+    workspaceId: 'xxx'
+  },
+  routes,
+  intents: [
+    {
+      name: 'greeting',
+      phrases: ['hello', 'hi', 'what\'s up'],
+    },
+    {
+      name: 'farewell',
+      phrases: ['goodbye', 'bye', 'see you tomorrow'],
+    },
+  ],
+  logger: console
+});
+
+gabby.applyChanges()
+  .then(() => {
+    console.log('all ready to go!');
+    const { msg } = await gabby.sendMessage('hello');
+    // send msg to user
+  });
 ```
-With JSX config
+### With JSX config:
 ```javascript
-  import Gabby, {
-    parseReactRoutes,
-    Root,
-    Route
-  } from 'gabby';
+import Gabby, {
+  parseReactRoutes,
+  Root,
+  Route
+} from 'gabby';
 
-  const routes = (
-    <Root>
-      <Route name="hello" when="#greeting" component={Hello} />
-      <Route name="farewell" when="#farewell" component={Goodbye} />
-    </Root>
-  );
+const routes = (
+  <Root>
+    <Route name="hello" when="#greeting" component={Hello} />
+    <Route name="farewell" when="#farewell" component={Goodbye} />
+  </Root>
+);
 
-  const gabby = new Gabby({
-    name: 'my sweet chatbot',
-    credentials: {
-      username: 'xxx',
-      password: 'xxx',
-      workspaceId: 'xxx'
+const gabby = new Gabby({
+  name: 'my sweet chatbot',
+  credentials: {
+    username: 'xxx',
+    password: 'xxx',
+    workspaceId: 'xxx'
+  },
+  routes,
+  intents: [
+    {
+      name: 'greeting',
+      phrases: ['hello', 'hi', 'what\'s up'],
     },
-    routes,
-    intents: [
-      {
-        name: 'greeting',
-        phrases: ['hello', 'hi', 'what\'s up'],
-      },
-      {
-        name: 'farewell',
-        phrases: ['goodbye', 'bye', 'see you tomorrow'],
-      },
-    ],
-    logger: console
-  });
+    {
+      name: 'farewell',
+      phrases: ['goodbye', 'bye', 'see you tomorrow'],
+    },
+  ],
+  logger: console
+});
 
-  gabby.applyChanges()
-    .then(() => {
-      console.log('all ready to go!');
-      const { msg } = await gabby.sendMessage('hello');
-      // send msg to user
-    });
+gabby.applyChanges()
+  .then(() => {
+    console.log('all ready to go!');
+    const { msg } = await gabby.sendMessage('hello');
+    // send msg to user
+  });
 ```
  
 ## Contributing
