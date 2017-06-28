@@ -1,4 +1,4 @@
-import Gab from './Gab';
+import Gabby from './Gabby';
 import parseReactRoutes from './parseReactRoutes';
 
 import Root from './components/Root';
@@ -12,4 +12,4 @@ export {
   Redirect,
 };
 
-export default Gab;
+export default Gabby;

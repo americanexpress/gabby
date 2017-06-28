@@ -22,7 +22,7 @@ function timeout(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-export class Gab extends ConversationV1 {
+export class Gabby extends ConversationV1 {
   private workspaceName: string;
   private credentials: IWatsonCredentials;
   private routes: IRoutes;
@@ -228,4 +228,4 @@ export class Gab extends ConversationV1 {
   }
 }
 
-export default Gab;
+export default Gabby;

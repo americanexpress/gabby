@@ -1,6 +1,6 @@
 import { ConversationV1 } from 'watson-developer-cloud';
 import { IWatsonProps, IRoutes, IIntents, IEntities } from '../interfaces';
-export declare class Gab extends ConversationV1 {
+export declare class Gabby extends ConversationV1 {
     private workspaceName;
     private credentials;
     private routes;
@@ -23,4 +23,4 @@ export declare class Gab extends ConversationV1 {
     getEntities(): IEntities;
     setEntities(entities: IEntities): this;
 }
-export default Gab;
+export default Gabby;
