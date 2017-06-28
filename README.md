@@ -5,7 +5,7 @@ Gabby provides a way to interface with several chatbot providers. Currently we s
 Many services provide a user interface for creating your chatbot but when you start to bring more developers into the picture it starts to fall apart. Gabby provides a way to have your chatbot be code/config driven as well as platform agnostic. Having your chatbot as code/config also allows you to version it using source control which makes upgrades and rollbacks a breeze.
  
 # Examples
-### Without JSX config:
+##### Without JSX config:
 ```javascript
 import Gabby from 'gabby';
 
@@ -54,7 +54,8 @@ gabby.applyChanges()
     // send msg to user
   });
 ```
-### With JSX config:
+ 
+##### With JSX config:
 ```javascript
 import Gabby, {
   parseReactRoutes,
