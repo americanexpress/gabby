@@ -14,13 +14,23 @@
  * permissions and limitations under the License.
  */
  
-import { IEntities } from './interfaces';
-export default function createEntity(entities: IEntities): {
-    entity: string;
-    fuzzy_match: boolean;
-    description: string;
-    values: {
-        value: string;
-        synonyms: string[];
-    }[];
-}[];
+import { IRoutes, IRouteNode, IHandlers } from '../interfaces';
+
+export default function createHandlers(routes: IRoutes) {
+  const tree: IHandlers = new Map();
+
+  function recurse(node: IRouteNode) {
+    const { name, children, handler } = node;
+    if (handler) {
+      tree.set(name, handler);
+    }
+
+    children.forEach(child => recurse(child));
+  }
+
+  if (routes) {
+    recurse(routes);
+  }
+
+  return tree;
+}

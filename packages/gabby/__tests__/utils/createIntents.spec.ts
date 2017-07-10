@@ -14,5 +14,24 @@
  * permissions and limitations under the License.
  */
  
-import { IRoutes } from './interfaces';
-export default function createHandlers(routes: IRoutes): Map<string, Function>;
+import createIntents from '../../src/utils/createIntents';
+
+describe('Create intents', () => {
+  it('should return valid watson structure', () => {
+    expect(createIntents([
+      {
+        name: 'Confirm',
+        phrases: ['yes', 'confirm', 'sure'],
+      },
+    ])).toEqual([
+      {
+        intent: 'Confirm',
+        examples: [
+          { text: 'yes' },
+          { text: 'confirm' },
+          { text: 'sure' },
+        ],
+      },
+    ]);
+  });
+});

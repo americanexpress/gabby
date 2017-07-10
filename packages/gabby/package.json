@@ -1,6 +1,6 @@
 {
   "name": "gabby",
-  "version": "1.0.0",
+  "version": "0.0.3",
   "description": "",
   "main": "build/index.js",
   "types": "build/index.d.ts",
@@ -65,14 +65,13 @@
     "jest": "^20.0.4",
     "merge2": "^1.0.3",
     "nodemon": "^1.11.0",
+    "react": "^15.6.1",
     "ts-jest": "^20.0.6",
     "tslint": "^5.4.3",
     "tslint-config-airbnb": "^5.2.0",
     "typescript": "^2.4.0"
   },
   "dependencies": {
-    "log-update": "^2.0.0",
-    "react": "^15.5.4",
     "typescript": "^2.4.0",
     "watson-developer-cloud": "^2.32.1"
   }

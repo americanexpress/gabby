@@ -1,3 +1,4 @@
+"use strict";
 /*
  * Copyright 2017 American Express
  *
@@ -13,12 +14,19 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
- 
-import { IIntents } from './interfaces';
-export default function createEntity(intents: IIntents): {
-    intent: string;
-    examples: {
-        text: string;
-    }[];
-    description: string;
-}[];
+Object.defineProperty(exports, "__esModule", { value: true });
+function createHandlers(routes) {
+    var tree = new Map();
+    function recurse(node) {
+        var name = node.name, children = node.children, handler = node.handler;
+        if (handler) {
+            tree.set(name, handler);
+        }
+        children.forEach(function (child) { return recurse(child); });
+    }
+    if (routes) {
+        recurse(routes);
+    }
+    return tree;
+}
+exports.default = createHandlers;

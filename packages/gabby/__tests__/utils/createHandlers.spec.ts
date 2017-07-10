@@ -14,8 +14,8 @@
  * permissions and limitations under the License.
  */
  
-import { IRoutes } from '../src/interfaces';
-import createHandlers from '../src/createHandlers';
+import { IRoutes } from '../../src/interfaces';
+import createHandlers from '../../src/utils/createHandlers';
 
 describe('Create handlers', () => {
   it('should return a map of handlers for routes', () => {

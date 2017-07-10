@@ -14,8 +14,8 @@
  * permissions and limitations under the License.
  */
  
-import Gabby from '../../src/Gabby';
-import { IRoutes, IIntents, IEntities } from '../../src/interfaces';
+import Gabby from '../src/Gabby';
+import { IRoutes, IIntents, IEntities } from '../src/interfaces';
 
 interface MockedGabby extends Gabby {
   mock: Function;

@@ -16,10 +16,10 @@
  
 import * as React from 'react';
 
-import parseReactRoutes from '../src/parseReactRoutes';
-import Root from '../src/components/Root';
-import Route from '../src/components/Route';
-import Redirect from '../src/components/Redirect';
+import parseReactRoutes from '../../src/utils/parseReactRoutes';
+import Root from '../../src/components/Root';
+import Route from '../../src/components/Route';
+import Redirect from '../../src/components/Redirect';
 
 const SelectPlan = () => `Some help`;
 const TermsAccepted = () => `Some terms`;

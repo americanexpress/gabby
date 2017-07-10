@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
  
-import createEntities from '../src/createEntities';
+import createEntities from '../../src/utils/createEntities';
 
 describe('Create entities', () => {
   it('should return valid watson structure', () => {

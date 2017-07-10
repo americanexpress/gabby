@@ -1,3 +1,4 @@
+"use strict";
 /*
  * Copyright 2017 American Express
  *
@@ -13,18 +14,13 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
- 
-import { IEntities } from './interfaces';
-
+Object.defineProperty(exports, "__esModule", { value: true });
 // map our easier to use interface to the more complicated watson interface
-export default function createEntity(entities: IEntities) {
-  return entities.map(entity => ({
-    entity: entity.name,
-    fuzzy_match: entity.fuzzy || false,
-    description: entity.description,
-    values: entity.values.map(value => ({
-      value: value.name,
-      synonyms: value.synonyms,
-    })),
-  }));
+function createEntity(intents) {
+    return intents.map(function (intent) { return ({
+        intent: intent.name,
+        examples: intent.phrases.map(function (text) { return ({ text: text }); }),
+        description: intent.description,
+    }); });
 }
+exports.default = createEntity;

@@ -16,12 +16,12 @@
  
 import * as React from 'react';
 
-import parseReactRoutes from '../src/parseReactRoutes';
-import Root from '../src/components/Root';
-import Route from '../src/components/Route';
-import Redirect from '../src/components/Redirect';
+import parseReactRoutes from '../../src/utils/parseReactRoutes';
+import Root from '../../src/components/Root';
+import Route from '../../src/components/Route';
+import Redirect from '../../src/components/Redirect';
 
-import createDialogTree from '../src/createDialogTree';
+import createDialogTree from '../../src/utils/createDialogTree';
 
 const Hello = () => `Hello`;
 const SelectPlan = () => `Some help`;
