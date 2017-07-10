@@ -1,4 +1,3 @@
 node_modules/
 test-results/
 .vscode
-lerna-debug.log
