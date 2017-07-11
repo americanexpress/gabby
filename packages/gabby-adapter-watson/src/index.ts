@@ -13,7 +13,9 @@ export interface IWatsonCredentials {
 
 export interface IWatson extends IWatsonCredentials {
   name: string;
-  logger: ILogger;
+  statusPollRate?: number;
+  maxStatusPollCount?: number;
+  logger?: ILogger;
 }
 
 function timeout(ms) {
@@ -27,16 +29,26 @@ export default class Watson implements IAdapter {
   private credentials: IWatsonCredentials;
   private logger: ILogger;
 
-  private statusPollRate = 3000;
-  private maxStatusPollCount = 30;
+  private statusPollRate;
+  private maxStatusPollCount;
 
-  constructor({ name, username, password, workspaceId, logger }: IWatson) {
+  constructor({
+    name,
+    username,
+    password,
+    workspaceId,
+    statusPollRate = 3000,
+    maxStatusPollCount = 30,
+    logger
+  }: IWatson) {
     this.workspaceName = name;
     this.credentials = {
       username,
       password,
       workspaceId,
     };
+    this.statusPollRate = statusPollRate;
+    this.maxStatusPollCount = maxStatusPollCount;
     this.logger = logger;
 
     this.client = new ConversationV1({
@@ -61,43 +73,49 @@ export default class Watson implements IAdapter {
         workspace_id: this.credentials.workspaceId,
         description: '',
       }, async (err) => {
-        if (!err) {
-          if (this.logger) {
-            this.logger.log('Done with initialization.');
-          }
-
-          for (let pollCount = 0; pollCount < this.maxStatusPollCount; pollCount++) {
-            try {
-              const status = await this.getWorkspaceStatus();
-              switch (status) {
-                case 'TRAINING': {
-                  if (this.logger) {
-                    this.logger.log('Training...');
-                  }
-                  break;
-                }
-                case 'AVAILABLE': {
-                  if (this.logger) {
-                    this.logger.log('Done training.');
-                  }
-                  return resolve();
-                }
-                default: {
-                  if (this.logger) {
-                    this.logger.error('unhandled', status);
-                  }
-                  return reject(new Error(`unhandled app status ${status}`));
-                }
-              }
-            } catch (e) {
-              return reject(e);
-            }
-
-            await timeout(this.statusPollRate);
-          }
-        } else {
+        if (err) {
           return reject(err);
         }
+
+        /* istanbul ignore next */
+        if (this.logger) {
+          this.logger.log('Done with initialization.');
+        }
+
+        for (let pollCount = 0; pollCount < this.maxStatusPollCount; pollCount++) {
+          try {
+            const status = await this.getWorkspaceStatus();
+            switch (status) {
+              case 'TRAINING': {
+                /* istanbul ignore next */
+                if (this.logger) {
+                  this.logger.log('Training...');
+                }
+                break;
+              }
+              case 'AVAILABLE': {
+                /* istanbul ignore next */
+                if (this.logger) {
+                  this.logger.log('Done training.');
+                }
+                return resolve();
+              }
+              default: {
+                /* istanbul ignore next */
+                if (this.logger) {
+                  this.logger.error('unhandled', status);
+                }
+                return reject(new Error(`unhandled app status ${status}`));
+              }
+            }
+          } catch (e) {
+            return reject(e);
+          }
+
+          await timeout(this.statusPollRate);
+        }
+
+        return reject(new Error('Apply changes timed out.'));
       });
     });
   }

@@ -36,20 +36,23 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 exports.__esModule = true;
 var watson_developer_cloud_1 = require("watson-developer-cloud");
+var createDialogTree_1 = require("./utils/createDialogTree");
+var createIntents_1 = require("./utils/createIntents");
+var createEntities_1 = require("./utils/createEntities");
 function timeout(ms) {
     return new Promise(function (resolve) { return setTimeout(resolve, ms); });
 }
 var Watson = (function () {
     function Watson(_a) {
-        var name = _a.name, username = _a.username, password = _a.password, workspaceId = _a.workspaceId, logger = _a.logger;
-        this.statusPollRate = 3000;
-        this.maxStatusPollCount = 30;
+        var name = _a.name, username = _a.username, password = _a.password, workspaceId = _a.workspaceId, _b = _a.statusPollRate, statusPollRate = _b === void 0 ? 3000 : _b, _c = _a.maxStatusPollCount, maxStatusPollCount = _c === void 0 ? 30 : _c, logger = _a.logger;
         this.workspaceName = name;
         this.credentials = {
             username: username,
             password: password,
             workspaceId: workspaceId
         };
+        this.statusPollRate = statusPollRate;
+        this.maxStatusPollCount = maxStatusPollCount;
         this.logger = logger;
         this.client = new watson_developer_cloud_1.ConversationV1({
             username: username,
@@ -60,12 +63,15 @@ var Watson = (function () {
     }
     Watson.prototype.applyChanges = function (_a) {
         var _this = this;
-        var dialog_nodes = _a.routes, intents = _a.intents, entities = _a.entities;
+        var routes = _a.routes, intents = _a.intents, entities = _a.entities;
+        var parsedDialogTree = createDialogTree_1["default"](routes);
+        var parsedIntents = createIntents_1["default"](intents);
+        var parsedEntities = createEntities_1["default"](entities);
         return new Promise(function (resolve, reject) {
             _this.client.updateWorkspace({
-                dialog_nodes: dialog_nodes,
-                intents: intents,
-                entities: entities,
+                dialog_nodes: parsedDialogTree,
+                intents: parsedIntents,
+                entities: parsedEntities,
                 name: _this.workspaceName,
                 workspace_id: _this.credentials.workspaceId,
                 description: ''
@@ -74,7 +80,10 @@ var Watson = (function () {
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
-                            if (!!err) return [3 /*break*/, 9];
+                            if (err) {
+                                return [2 /*return*/, reject(err)];
+                            }
+                            /* istanbul ignore next */
                             if (this.logger) {
                                 this.logger.log('Done with initialization.');
                             }
@@ -90,18 +99,21 @@ var Watson = (function () {
                             status = _a.sent();
                             switch (status) {
                                 case 'TRAINING': {
+                                    /* istanbul ignore next */
                                     if (this.logger) {
                                         this.logger.log('Training...');
                                     }
                                     break;
                                 }
                                 case 'AVAILABLE': {
+                                    /* istanbul ignore next */
                                     if (this.logger) {
                                         this.logger.log('Done training.');
                                     }
                                     return [2 /*return*/, resolve()];
                                 }
                                 default: {
+                                    /* istanbul ignore next */
                                     if (this.logger) {
                                         this.logger.error('unhandled', status);
                                     }
@@ -119,9 +131,7 @@ var Watson = (function () {
                         case 7:
                             pollCount++;
                             return [3 /*break*/, 1];
-                        case 8: return [3 /*break*/, 10];
-                        case 9: return [2 /*return*/, reject(err)];
-                        case 10: return [2 /*return*/];
+                        case 8: return [2 /*return*/, reject(new Error('Apply changes timed out.'))];
                     }
                 });
             }); });

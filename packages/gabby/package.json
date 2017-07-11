@@ -1,6 +1,6 @@
 {
   "name": "gabby",
-  "version": "0.0.3",
+  "version": "0.0.5",
   "description": "",
   "main": "build/index.js",
   "types": "build/index.d.ts",
@@ -58,7 +58,7 @@
     "@types/jest": "^19.2.4",
     "@types/node": "^8.0.9",
     "@types/react": "^15.0.26",
-    "gabby-types": "^0.0.5",
+    "gabby-types": "0.0.5",
     "gulp": "^3.9.1",
     "gulp-typescript": "^3.1.7",
     "jest": "^20.0.4",
