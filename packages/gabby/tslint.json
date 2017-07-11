@@ -9,6 +9,9 @@
     ],
     "variable-name": [
       "allow-pascal-case"
+    ],
+    "import-name": [
+      false
     ]
   }
 }

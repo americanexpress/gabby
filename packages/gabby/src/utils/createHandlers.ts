@@ -1,4 +1,3 @@
-"use strict";
 /*
  * Copyright 2017 American Express
  *
@@ -14,7 +13,22 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-Object.defineProperty(exports, "__esModule", { value: true });
-var Route = function () { return null; };
-exports.default = Route;
-//# sourceMappingURL=Route.js.map
+
+import { IRoutes, IRouteNode, IHandlers } from 'gabby-types';
+
+export default function createHandlers(routes: IRoutes): IHandlers {
+  const tree: IHandlers = new Map();
+
+  function recurse(node: IRouteNode) {
+    const { name, children, handler } = node;
+    if (handler) {
+      tree.set(name, handler);
+    }
+
+    children.forEach(child => recurse(child));
+  }
+
+  recurse(routes);
+  
+  return tree;
+}

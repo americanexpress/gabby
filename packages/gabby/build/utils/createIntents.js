@@ -15,6 +15,13 @@
  * permissions and limitations under the License.
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-var Route = function () { return null; };
-exports.default = Route;
-//# sourceMappingURL=Route.js.map
+// map our easier to use interface to the more complicated watson interface
+function createEntity(intents) {
+    return intents.map(function (intent) { return ({
+        intent: intent.name,
+        examples: intent.phrases.map(function (text) { return ({ text: text }); }),
+        description: intent.description,
+    }); });
+}
+exports.default = createEntity;
+//# sourceMappingURL=createIntents.js.map

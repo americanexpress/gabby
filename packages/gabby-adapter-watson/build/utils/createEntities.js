@@ -14,7 +14,17 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-Object.defineProperty(exports, "__esModule", { value: true });
-var Route = function () { return null; };
-exports.default = Route;
-//# sourceMappingURL=Route.js.map
+exports.__esModule = true;
+// map our easier to use interface to the more complicated watson interface
+function createEntity(entities) {
+    return entities.map(function (entity) { return ({
+        entity: entity.name,
+        fuzzy_match: entity.fuzzy || false,
+        description: entity.description,
+        values: entity.values.map(function (value) { return ({
+            value: value.name,
+            synonyms: value.synonyms
+        }); })
+    }); });
+}
+exports["default"] = createEntity;

@@ -15,7 +15,7 @@
  */
  
 import Gabby from './Gabby';
-import parseReactRoutes from './parseReactRoutes';
+import parseReactRoutes from './utils/parseReactRoutes';
 
 import Root from './components/Root';
 import Route from './components/Route';

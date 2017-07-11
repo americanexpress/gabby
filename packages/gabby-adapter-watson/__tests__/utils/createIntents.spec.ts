@@ -1,4 +1,3 @@
-"use strict";
 /*
  * Copyright 2017 American Express
  *
@@ -14,7 +13,25 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-Object.defineProperty(exports, "__esModule", { value: true });
-var Route = function () { return null; };
-exports.default = Route;
-//# sourceMappingURL=Route.js.map
+ 
+import createIntents from '../../src/utils/createIntents';
+
+describe('Create intents', () => {
+  it('should return valid watson structure', () => {
+    expect(createIntents([
+      {
+        name: 'Confirm',
+        phrases: ['yes', 'confirm', 'sure'],
+      },
+    ])).toEqual([
+      {
+        intent: 'Confirm',
+        examples: [
+          { text: 'yes' },
+          { text: 'confirm' },
+          { text: 'sure' },
+        ],
+      },
+    ]);
+  });
+});

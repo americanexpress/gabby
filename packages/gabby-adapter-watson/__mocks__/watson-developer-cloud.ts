@@ -1,4 +1,3 @@
-"use strict";
 /*
  * Copyright 2017 American Express
  *
@@ -14,7 +13,14 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-Object.defineProperty(exports, "__esModule", { value: true });
-var Route = function () { return null; };
-exports.default = Route;
-//# sourceMappingURL=Route.js.map
+ 
+// mock conversation class
+class ConversationV1{
+  public getWorkspace = jest.fn();
+  public updateWorkspace = jest.fn();
+  public message = jest.fn();
+}
+
+export {
+  ConversationV1
+}

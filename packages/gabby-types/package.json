@@ -1,0 +1,15 @@
+{
+  "name": "gabby-types",
+  "version": "0.0.5",
+  "description": "Common Typescript types for Gabby.",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "author": "Zach Ripka",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "typescript": "^2.4.1"
+  }
+}

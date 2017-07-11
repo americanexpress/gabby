@@ -1,3 +1,4 @@
+"use strict";
 /*
  * Copyright 2017 American Express
  *
@@ -13,11 +14,9 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
- 
-"use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var Gabby_1 = require("./Gabby");
-var parseReactRoutes_1 = require("./parseReactRoutes");
+var parseReactRoutes_1 = require("./utils/parseReactRoutes");
 exports.parseReactRoutes = parseReactRoutes_1.default;
 var Root_1 = require("./components/Root");
 exports.Root = Root_1.default;
@@ -26,3 +25,4 @@ exports.Route = Route_1.default;
 var Redirect_1 = require("./components/Redirect");
 exports.Redirect = Redirect_1.default;
 exports.default = Gabby_1.default;
+//# sourceMappingURL=index.js.map

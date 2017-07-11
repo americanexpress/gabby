@@ -1,4 +1,3 @@
-"use strict";
 /*
  * Copyright 2017 American Express
  *
@@ -14,7 +13,14 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-Object.defineProperty(exports, "__esModule", { value: true });
-var Route = function () { return null; };
-exports.default = Route;
-//# sourceMappingURL=Route.js.map
+ 
+import { IIntents } from 'gabby-types';
+
+// map our easier to use interface to the more complicated watson interface
+export default function createEntity(intents: IIntents) {
+  return intents.map(intent => ({
+    intent: intent.name,
+    examples: intent.phrases.map(text => ({ text })),
+    description: intent.description,
+  }));
+}
