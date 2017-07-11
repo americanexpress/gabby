@@ -4,3 +4,4 @@ function timeout(ms) {
     return new Promise(function (resolve) { return setTimeout(resolve, ms); });
 }
 exports.default = timeout;
+//# sourceMappingURL=timeout.js.map

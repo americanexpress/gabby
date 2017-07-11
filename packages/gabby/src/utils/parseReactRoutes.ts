@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
  
-import { IRoutes } from '../interfaces';
+import { IRoutes } from 'gabby-types';
 
 function getNS(prefix, next) {
   if (prefix) {

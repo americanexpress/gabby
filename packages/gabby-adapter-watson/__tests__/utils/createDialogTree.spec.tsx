@@ -15,11 +15,7 @@
  */
  
 import * as React from 'react';
-
-import parseReactRoutes from '../../src/utils/parseReactRoutes';
-import Root from '../../src/components/Root';
-import Route from '../../src/components/Route';
-import Redirect from '../../src/components/Redirect';
+import { parseReactRoutes, Root, Route, Redirect } from 'gabby';
 
 import createDialogTree from '../../src/utils/createDialogTree';
 

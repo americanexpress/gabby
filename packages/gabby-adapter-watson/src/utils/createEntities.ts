@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
  
-import { IEntities } from '../interfaces';
+import { IEntities } from 'gabby-types';
 
 // map our easier to use interface to the more complicated watson interface
 export default function createEntity(entities: IEntities) {

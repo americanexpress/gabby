@@ -14,27 +14,50 @@
  * permissions and limitations under the License.
  */
  
-import { ConversationV1 } from 'watson-developer-cloud';
+export interface IRouteNode {
+  name?: string;
+  to?: string;
+  when?: string;
+  handler?: Function;
+  children: IRouteNode[];
+}
 
-import {
-  IAdapterProps,
-  ICredentials,
-  IRoutes,
-  IIntents,
-  IEntities,
-  IHandlers,
-  ILogger,
-} from './interfaces';
+export type IRoutes = IRouteNode;
 
-import createDialogTree from './utils/createDialogTree';
-import createIntents from './utils/createIntents';
-import createEntities from './utils/createEntities';
-// create a map of handlers
-import createHandlers from './utils/createHandlers';
+export interface IIntent {
+  name: string;
+  phrases: string[];
+  description?: string;
+}
+
+export type IIntents = IIntent[];
+
+export interface IEntityValue {
+  name: string;
+  synonyms: string[];
+}
+
+export interface IEntity {
+  name: string;
+  values: IEntityValue[];
+  fuzzy?: boolean;
+  description?: string;
+}
+
+export type IEntities = IEntity[];
+
+export interface ILogger {
+  log: Function;
+  info: Function;
+  warn: Function;
+  error: Function;
+}
+
+export type IHandlers = Map<string, Function>;
 
 export type status = 'TRAINING' | 'AVAILABLE' | 'UNAVAILABLE' | 'UNKNOWN';
 
-interface IGabbyAdapter {
+export interface IAdapter {
   // get current status of workspace
   // ex: Training, Available, etc
   getWorkspaceStatus(): Promise<status>;
@@ -46,7 +69,7 @@ interface IGabbyAdapter {
 
   // send the message to the provider and return the
   // message to be sent to the user
-  sendMessage(msg: string, to?: string, context?: any): Promise<{
+  sendMessage(msg: string, to?: string, context?: object): Promise<{
     conversationId: string;
     context: object;
     intents: object[];
@@ -54,5 +77,3 @@ interface IGabbyAdapter {
     templateId: string;
   }>;
 }
-
-export default IGabbyAdapter;

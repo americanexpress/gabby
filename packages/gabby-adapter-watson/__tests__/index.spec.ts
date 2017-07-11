@@ -1,4 +1,3 @@
-"use strict";
 /*
  * Copyright 2017 American Express
  *
@@ -14,4 +13,29 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-Object.defineProperty(exports, "__esModule", { value: true });
+
+import WatsonAdapter from '../src/index';
+
+describe('Watson Gabby Adapter', () => {
+  describe('Apply Changes', () => {
+    it('should return a promise', () => {
+      const adapter = new WatsonAdapter({
+        name: 'test',
+        username: 'test',
+        password: 'test',
+        workspaceId: 'test',
+        logger: console,
+      });
+
+      const res = adapter.applyChanges({
+        routes: {
+          children: [],
+        },
+        intents: [],
+        entities: [],
+      });
+
+      expect(res).toEqual(expect.any(Promise));
+    });
+  });
+});

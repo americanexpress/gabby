@@ -34,9 +34,11 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 var watson_developer_cloud_1 = require("watson-developer-cloud");
-var timeout_1 = require("../utils/timeout");
+function timeout(ms) {
+    return new Promise(function (resolve) { return setTimeout(resolve, ms); });
+}
 var Watson = (function () {
     function Watson(_a) {
         var name = _a.name, username = _a.username, password = _a.password, workspaceId = _a.workspaceId, logger = _a.logger;
@@ -46,13 +48,14 @@ var Watson = (function () {
         this.credentials = {
             username: username,
             password: password,
-            workspaceId: workspaceId,
+            workspaceId: workspaceId
         };
         this.logger = logger;
         this.client = new watson_developer_cloud_1.ConversationV1({
             username: username,
             password: password,
             workspace_id: workspaceId,
+            version_date: watson_developer_cloud_1.ConversationV1.VERSION_DATE_2017_04_21
         });
     }
     Watson.prototype.applyChanges = function (_a) {
@@ -65,9 +68,9 @@ var Watson = (function () {
                 entities: entities,
                 name: _this.workspaceName,
                 workspace_id: _this.credentials.workspaceId,
-                description: '',
+                description: ''
             }, function (err) { return __awaiter(_this, void 0, void 0, function () {
-                var pollCount, status_1, e_1;
+                var pollCount, status, e_1;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
@@ -84,8 +87,8 @@ var Watson = (function () {
                             _a.trys.push([2, 4, , 5]);
                             return [4 /*yield*/, this.getWorkspaceStatus()];
                         case 3:
-                            status_1 = _a.sent();
-                            switch (status_1) {
+                            status = _a.sent();
+                            switch (status) {
                                 case 'TRAINING': {
                                     if (this.logger) {
                                         this.logger.log('Training...');
@@ -96,20 +99,20 @@ var Watson = (function () {
                                     if (this.logger) {
                                         this.logger.log('Done training.');
                                     }
-                                    return [2 /*return*/, Promise.resolve()];
+                                    return [2 /*return*/, resolve()];
                                 }
                                 default: {
                                     if (this.logger) {
-                                        this.logger.error('unhandled', status_1);
+                                        this.logger.error('unhandled', status);
                                     }
-                                    return [2 /*return*/, Promise.reject(new Error("unhandled app status " + status_1))];
+                                    return [2 /*return*/, reject(new Error("unhandled app status " + status))];
                                 }
                             }
                             return [3 /*break*/, 5];
                         case 4:
                             e_1 = _a.sent();
-                            return [2 /*return*/, Promise.reject(e_1)];
-                        case 5: return [4 /*yield*/, timeout_1.default(this.statusPollRate)];
+                            return [2 /*return*/, reject(e_1)];
+                        case 5: return [4 /*yield*/, timeout(this.statusPollRate)];
                         case 6:
                             _a.sent();
                             _a.label = 7;
@@ -128,7 +131,7 @@ var Watson = (function () {
         var _this = this;
         return new Promise(function (resolve, reject) {
             _this.client.getWorkspace({
-                workspace_id: _this.credentials.workspaceId,
+                workspace_id: _this.credentials.workspaceId
             }, function (err, data) {
                 if (err) {
                     return reject(err);
@@ -144,7 +147,7 @@ var Watson = (function () {
             _this.client.message({
                 context: context,
                 input: { text: msg },
-                workspace_id: _this.credentials.workspaceId,
+                workspace_id: _this.credentials.workspaceId
             }, function (err, response) {
                 if (err) {
                     return reject(err);
@@ -160,10 +163,11 @@ var Watson = (function () {
                     templateId: templateId,
                     intents: intents,
                     entities: entities,
+                    context: response.context
                 });
             });
         });
     };
     return Watson;
 }());
-exports.default = Watson;
+exports["default"] = Watson;

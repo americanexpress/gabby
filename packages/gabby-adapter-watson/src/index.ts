@@ -1,7 +1,9 @@
 import { ConversationV1 } from 'watson-developer-cloud';
-import IGabbyAdapter, { status  from '../Adapter';
-import timeout from '../utils/timeout';
-import { ILogger } from '../interfaces';
+import { IAdapter, ILogger, status } from 'gabby-types';
+
+import createDialogTree from './utils/createDialogTree';
+import createIntents from './utils/createIntents';
+import createEntities from './utils/createEntities';
 
 export interface IWatsonCredentials {
   username: string;
@@ -14,7 +16,11 @@ export interface IWatson extends IWatsonCredentials {
   logger: ILogger;
 }
 
-export default class Watson implements IGabbyAdapter {
+function timeout(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+export default class Watson implements IAdapter {
   private client: ConversationV1;
 
   private workspaceName: string;
@@ -37,15 +43,20 @@ export default class Watson implements IGabbyAdapter {
       username,
       password,
       workspace_id: workspaceId,
+      version_date: ConversationV1.VERSION_DATE_2017_04_21,
     });
   }
 
-  applyChanges({ routes: dialog_nodes, intents, entities }) {
+  applyChanges({ routes, intents, entities }) {
+    const parsedDialogTree = createDialogTree(routes);
+    const parsedIntents = createIntents(intents);
+    const parsedEntities = createEntities(entities);
+
     return new Promise((resolve, reject) => {
       this.client.updateWorkspace({
-        dialog_nodes,
-        intents,
-        entities,
+        dialog_nodes: parsedDialogTree,
+        intents: parsedIntents,
+        entities: parsedEntities,
         name: this.workspaceName,
         workspace_id: this.credentials.workspaceId,
         description: '',
@@ -69,17 +80,17 @@ export default class Watson implements IGabbyAdapter {
                   if (this.logger) {
                     this.logger.log('Done training.');
                   }
-                  return Promise.resolve();
+                  return resolve();
                 }
                 default: {
                   if (this.logger) {
                     this.logger.error('unhandled', status);
                   }
-                  return Promise.reject(new Error(`unhandled app status ${status}`));
+                  return reject(new Error(`unhandled app status ${status}`));
                 }
               }
             } catch (e) {
-              return Promise.reject(e);
+              return reject(e);
             }
 
             await timeout(this.statusPollRate);
@@ -100,13 +111,19 @@ export default class Watson implements IGabbyAdapter {
           return reject(err);
         }
 
-        return resolve(data.status.toUpperCase());
+        return resolve(<status>data.status.toUpperCase());
       });
     });
   }
 
   sendMessage(msg: string, to?: string, context = {}) {
-    return new Promise((resolve, reject) => {
+    return new Promise<{
+      conversationId: string;
+      templateId: string;
+      intents: object[];
+      entities: object[];
+      context: object,
+    }>((resolve, reject) => {
       this.client.message({
         context,
         input: { text: msg },
@@ -129,6 +146,7 @@ export default class Watson implements IGabbyAdapter {
           templateId,
           intents,
           entities,
+          context: response.context,
         });
       });
     });

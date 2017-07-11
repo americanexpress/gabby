@@ -41,3 +41,4 @@ function parseReactRoutes(routes) {
     return recurse(routes);
 }
 exports.default = parseReactRoutes;
+//# sourceMappingURL=parseReactRoutes.js.map

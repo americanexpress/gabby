@@ -1,4 +1,4 @@
-import { IEntities } from '../interfaces';
+import { IEntities } from 'gabby-types';
 export default function createEntity(entities: IEntities): {
     entity: string;
     fuzzy_match: boolean;

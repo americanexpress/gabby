@@ -50,92 +50,135 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var createDialogTree_1 = require("./utils/createDialogTree");
-var createIntents_1 = require("./utils/createIntents");
-var createEntities_1 = require("./utils/createEntities");
 // create a map of handlers
 var createHandlers_1 = require("./utils/createHandlers");
 var Gabby = (function () {
     function Gabby(_a) {
-        var adapter = _a.adapter, routes = _a.routes, _b = _a.intents, intents = _b === void 0 ? [] : _b, _c = _a.entities, entities = _c === void 0 ? [] : _c, logger = _a.logger, _d = _a.maxStatusPollCount, maxStatusPollCount = _d === void 0 ? 30 : _d, _e = _a.statusPollRate, statusPollRate = _e === void 0 ? 3000 : _e;
+        var adapter = _a.adapter, routes = _a.routes, _b = _a.intents, intents = _b === void 0 ? [] : _b, _c = _a.entities, entities = _c === void 0 ? [] : _c, _d = _a.logger, logger = _d === void 0 ? null : _d;
+        this.dirty = true;
         this.contexts = new Map();
         this.adapter = adapter;
         this.routes = routes;
         this.intents = intents;
         this.entities = entities;
         this.logger = logger;
-        this.maxStatusPollCount = maxStatusPollCount;
-        this.statusPollRate = statusPollRate;
-        this.handlers = createHandlers_1.default(this.routes);
     }
-    Gabby.prototype.sendMessage = function (msg, to) {
-        var _this = this;
-        if (!this.routes) {
-            return Promise.reject(new Error('No routes specified'));
-        }
-        return new Promise(function (resolve, reject) {
-            _this.adapter.sendMessage(msg, to, _this.contexts.get(to))
-                .then(function (_a) {
-                var conversationId = _a.conversationId, context = _a.context, intents = _a.intents, entities = _a.entities, templateId = _a.templateId;
-                return __awaiter(_this, void 0, void 0, function () {
-                    var template, msg;
-                    return __generator(this, function (_a) {
-                        switch (_a.label) {
-                            case 0:
-                                this.contexts.set(conversationId, context);
-                                if (!templateId) {
-                                    return [2 /*return*/, reject(new Error('No template specified'))];
-                                }
-                                template = this.handlers.get(templateId);
-                                if (!template) {
-                                    return [2 /*return*/, reject(new Error(templateId + " has not been setup."))];
-                                }
-                                return [4 /*yield*/, new Promise(function (res) { return res(template({ context: context, intents: intents, entities: entities })); })];
-                            case 1:
-                                msg = _a.sent();
-                                return [2 /*return*/, resolve({
-                                        msg: msg,
-                                        conversationId: conversationId,
-                                    })];
-                        }
-                    });
-                });
+    Gabby.prototype.applyChanges = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var e_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        this.handlers = createHandlers_1.default(this.routes);
+                        return [4 /*yield*/, this.adapter.applyChanges({
+                                routes: this.routes,
+                                intents: this.intents,
+                                entities: this.entities,
+                            })];
+                    case 1:
+                        _a.sent();
+                        this.dirty = false;
+                        return [3 /*break*/, 3];
+                    case 2:
+                        e_1 = _a.sent();
+                        throw e_1;
+                    case 3: return [2 /*return*/];
+                }
             });
         });
     };
-    Gabby.prototype.applyChanges = function () {
-        var parsedDialogTree = createDialogTree_1.default(this.routes);
-        var parsedIntents = createIntents_1.default(this.intents);
-        var parsedEntities = createEntities_1.default(this.entities);
-        this.handlers = createHandlers_1.default(this.routes);
-        return this.adapter.applyChanges({
-            routes: parsedDialogTree,
-            intents: parsedIntents,
-            entities: parsedEntities,
+    Gabby.prototype.sendMessage = function (message, to) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _a, conversationId, context, intents, entities, templateId, template, msg;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        if (!this.routes) {
+                            return [2 /*return*/, Promise.reject(new Error('No routes specified'))];
+                        }
+                        if (this.dirty) {
+                            return [2 /*return*/, Promise.reject(new Error('You have not applied your changes yet.'))];
+                        }
+                        return [4 /*yield*/, this.adapter.sendMessage(message, to, this.contexts.get(to))];
+                    case 1:
+                        _a = _b.sent(), conversationId = _a.conversationId, context = _a.context, intents = _a.intents, entities = _a.entities, templateId = _a.templateId;
+                        this.contexts.set(conversationId, context);
+                        if (!templateId) {
+                            return [2 /*return*/, Promise.reject(new Error('No template specified'))];
+                        }
+                        template = this.handlers.get(templateId);
+                        if (!template) {
+                            return [2 /*return*/, Promise.reject(new Error(templateId + " has not been setup."))];
+                        }
+                        return [4 /*yield*/, new Promise(function (res) { return res(template({ context: context, intents: intents, entities: entities })); })];
+                    case 2:
+                        msg = _b.sent();
+                        return [2 /*return*/, Promise.resolve({
+                                msg: msg,
+                                conversationId: conversationId,
+                            })];
+                }
+            });
         });
     };
-    Gabby.prototype.getRoutes = function () {
-        return this.routes;
-    };
-    Gabby.prototype.setRoutes = function (routes) {
-        this.routes = routes;
-        return this;
-    };
-    Gabby.prototype.getIntents = function () {
-        return this.intents;
-    };
-    Gabby.prototype.setIntents = function (intents) {
-        this.intents = intents;
-        return this;
-    };
-    Gabby.prototype.getEntities = function () {
-        return this.entities;
-    };
-    Gabby.prototype.setEntities = function (entities) {
-        this.entities = entities;
-        return this;
-    };
+    Object.defineProperty(Gabby.prototype, "routes", {
+        get: function () {
+            return this._routes;
+        },
+        set: function (routes) {
+            this.dirty = true;
+            this._routes = routes;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Gabby.prototype, "intents", {
+        get: function () {
+            return this._intents;
+        },
+        set: function (intents) {
+            this.dirty = true;
+            this._intents = intents;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Gabby.prototype, "entities", {
+        get: function () {
+            return this._entities;
+        },
+        set: function (entities) {
+            this.dirty = true;
+            this._entities = entities;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Gabby.prototype, "adapter", {
+        get: function () {
+            return this._adapter;
+        },
+        set: function (adapter) {
+            this.dirty = true;
+            this._adapter = adapter;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Gabby.prototype, "logger", {
+        get: function () {
+            return this._logger;
+        },
+        set: function (logger) {
+            this.dirty = true;
+            this._logger = logger;
+        },
+        enumerable: true,
+        configurable: true
+    });
     return Gabby;
 }());
 exports.Gabby = Gabby;
 exports.default = Gabby;
+//# sourceMappingURL=Gabby.js.map

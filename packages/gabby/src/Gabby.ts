@@ -15,33 +15,33 @@
  */
  
 import {
+  IAdapter,
   IRoutes,
   IIntents,
   IEntities,
   IHandlers,
   ILogger,
-} from './interfaces';
+} from 'gabby-types';
 
-import IGabbyAdapter from './Adapter';
-
-import createDialogTree from './utils/createDialogTree';
-import createIntents from './utils/createIntents';
-import createEntities from './utils/createEntities';
 // create a map of handlers
 import createHandlers from './utils/createHandlers';
 
-export class Gabby {
-  private adapter: IGabbyAdapter;
-  private routes: IRoutes;
-  private intents: IIntents;
-  private entities: IEntities;
-  private handlers: IHandlers;
-  private logger: ILogger;
+export interface IGabby {
+  adapter: IAdapter;
+  routes?: IRoutes;
+  intents?: IIntents;
+  entities?: IEntities;
+  logger?: ILogger;
+}
 
-  // how many times to poll before giving up
-  private maxStatusPollCount: number;
-  // how quickly to poll
-  private statusPollRate: number; // ms
+export class Gabby {
+  private dirty: boolean = true;
+  private handlers: IHandlers;
+  private _adapter: IAdapter;
+  private _routes: IRoutes;
+  private _intents: IIntents;
+  private _entities: IEntities;
+  private _logger: ILogger;
 
   private contexts = new Map<string, object>();
 
@@ -50,94 +50,112 @@ export class Gabby {
     routes,
     intents = [],
     entities = [],
-    logger,
-    maxStatusPollCount = 30,
-    statusPollRate = 3000,
-  }) {
+    logger = null,
+  } : IGabby) {
     this.adapter = adapter;
     this.routes = routes;
     this.intents = intents;
     this.entities = entities;
     this.logger = logger;
-
-    this.maxStatusPollCount = maxStatusPollCount;
-    this.statusPollRate = statusPollRate;
-    this.handlers = createHandlers(this.routes);
   }
 
-  sendMessage(msg: string, to?: string) {
+  async applyChanges() {
+    try {
+      this.handlers = createHandlers(this.routes);
+      await this.adapter.applyChanges({
+        routes: this.routes,
+        intents: this.intents,
+        entities: this.entities,
+      });
+      this.dirty = false;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  async sendMessage(message: string, to?: string) {
     if (!this.routes) {
       return Promise.reject(new Error('No routes specified'));
     }
 
-    return new Promise((resolve, reject) => {
-      this.adapter.sendMessage(msg, to, this.contexts.get(to))
-        .then(async ({ conversationId, context, intents, entities, templateId }) => {
+    if (this.dirty) {
+      return Promise.reject(new Error('You have not applied your changes yet.'));
+    }
 
-          this.contexts.set(conversationId, context);
+    const {
+      conversationId,
+      context,
+      intents,
+      entities,
+      templateId
+    } = await this.adapter.sendMessage(message, to, this.contexts.get(to));
 
-          if (!templateId) {
-            return reject(new Error('No template specified'));
-          }
+    this.contexts.set(conversationId, context);
 
-          const template = this.handlers.get(templateId);
+    if (!templateId) {
+      return Promise.reject(new Error('No template specified'));
+    }
 
-          if (!template) {
-            return reject(new Error(`${templateId} has not been setup.`));
-          }
+    const template = this.handlers.get(templateId);
 
-          // handle promises as well as non-promise values
-          const msg = await new Promise(res => res(
-            template({ context, intents, entities }),
-          ));
+    if (!template) {
+      return Promise.reject(new Error(`${templateId} has not been setup.`));
+    }
 
-          return resolve({
-            msg,
-            conversationId,
-          });
-        });
+    // handle promises as well as non-promise values
+    const msg = await new Promise(res => res(
+      template({ context, intents, entities }),
+    ));
+
+    return Promise.resolve({
+      msg,
+      conversationId,
     });
   }
 
-  applyChanges() {
-    const parsedDialogTree = createDialogTree(this.routes);
-    const parsedIntents = createIntents(this.intents);
-    const parsedEntities = createEntities(this.entities);
-
-    this.handlers = createHandlers(this.routes);
-
-    return this.adapter.applyChanges({
-      routes: parsedDialogTree,
-      intents: parsedIntents,
-      entities: parsedEntities,
-    });
+  get routes(): IRoutes {
+    return this._routes;
   }
 
-  getRoutes(): IRoutes {
-    return this.routes;
+  set routes(routes: IRoutes) {
+    this.dirty = true;
+    this._routes = routes;
   }
 
-  setRoutes(routes: IRoutes) {
-    this.routes = routes;
-    return this;
+  get intents(): IIntents {
+    return this._intents;
   }
 
-  getIntents(): IIntents {
-    return this.intents;
+  set intents(intents: IIntents) {
+    this.dirty = true;
+    this._intents = intents;
   }
 
-  setIntents(intents: IIntents) {
-    this.intents = intents;
-    return this;
+  get entities(): IEntities {
+    return this._entities;
   }
 
-  getEntities(): IEntities {
-    return this.entities;
+  set entities(entities: IEntities) {
+    this.dirty = true;
+    this._entities = entities;
   }
 
-  setEntities(entities: IEntities) {
-    this.entities = entities;
-    return this;
+  get adapter() {
+    return this._adapter;
+  }
+
+  set adapter(adapter: IAdapter) {
+    this.dirty = true;
+    this._adapter = adapter;
+  }
+
+  get logger() {
+    return this._logger;
+  }
+
+  set logger(logger: ILogger) {
+    this.dirty = true;
+    this._logger = logger;
   }
 }
 

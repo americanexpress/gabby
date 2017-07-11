@@ -3,6 +3,5 @@ import parseReactRoutes from './utils/parseReactRoutes';
 import Root from './components/Root';
 import Route from './components/Route';
 import Redirect from './components/Redirect';
-import Watson from './adapters/Watson';
-export { parseReactRoutes, Root, Route, Redirect, Watson };
+export { parseReactRoutes, Root, Route, Redirect };
 export default Gabby;

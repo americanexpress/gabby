@@ -15,10 +15,10 @@
  */
  
 // mock conversation class
-class ConversationV1 {
-  mock(method: string, fn) {
-    this[method] = jest.fn(fn);
-  }
+class ConversationV1{
+  public getWorkspace = jest.fn();
+  public updateWorkspace = jest.fn();
+  public message = jest.fn();
 }
 
 export {

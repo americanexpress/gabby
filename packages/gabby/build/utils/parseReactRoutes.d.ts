@@ -1,2 +1,2 @@
-import { IRoutes } from '../interfaces';
+import { IRoutes } from 'gabby-types';
 export default function parseReactRoutes(routes: any): IRoutes;

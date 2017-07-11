@@ -24,6 +24,5 @@ var Route_1 = require("./components/Route");
 exports.Route = Route_1.default;
 var Redirect_1 = require("./components/Redirect");
 exports.Redirect = Redirect_1.default;
-var Watson_1 = require("./adapters/Watson");
-exports.Watson = Watson_1.default;
 exports.default = Gabby_1.default;
+//# sourceMappingURL=index.js.map

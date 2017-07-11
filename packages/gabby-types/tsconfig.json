@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "declaration": true,
+    "outDir": "build",
+    "lib": [
+      "es2015"
+    ]
+  },
+  "files": [
+    "src/index.ts"
+  ]
+}

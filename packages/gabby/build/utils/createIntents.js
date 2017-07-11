@@ -24,3 +24,4 @@ function createEntity(intents) {
     }); });
 }
 exports.default = createEntity;
+//# sourceMappingURL=createIntents.js.map

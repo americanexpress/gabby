@@ -1,30 +1,30 @@
-import { IRoutes, IIntents, IEntities } from './interfaces';
+import { IAdapter, IRoutes, IIntents, IEntities, ILogger } from 'gabby-types';
+export interface IGabby {
+    adapter: IAdapter;
+    routes?: IRoutes;
+    intents?: IIntents;
+    entities?: IEntities;
+    logger?: ILogger;
+}
 export declare class Gabby {
-    private adapter;
-    private routes;
-    private intents;
-    private entities;
+    private dirty;
     private handlers;
-    private logger;
-    private maxStatusPollCount;
-    private statusPollRate;
+    private _adapter;
+    private _routes;
+    private _intents;
+    private _entities;
+    private _logger;
     private contexts;
-    constructor({adapter, routes, intents, entities, logger, maxStatusPollCount, statusPollRate}: {
-        adapter: any;
-        routes: any;
-        intents?: undefined[];
-        entities?: undefined[];
-        logger: any;
-        maxStatusPollCount?: number;
-        statusPollRate?: number;
-    });
-    sendMessage(msg: string, to?: string): Promise<{}>;
-    applyChanges(): Promise<{}>;
-    getRoutes(): IRoutes;
-    setRoutes(routes: IRoutes): this;
-    getIntents(): IIntents;
-    setIntents(intents: IIntents): this;
-    getEntities(): IEntities;
-    setEntities(entities: IEntities): this;
+    constructor({adapter, routes, intents, entities, logger}: IGabby);
+    applyChanges(): Promise<void>;
+    sendMessage(message: string, to?: string): Promise<{
+        msg: {};
+        conversationId: string;
+    }>;
+    routes: IRoutes;
+    intents: IIntents;
+    entities: IEntities;
+    adapter: IAdapter;
+    logger: ILogger;
 }
 export default Gabby;

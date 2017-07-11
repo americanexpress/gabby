@@ -1,2 +1,2 @@
-import { IRoutes } from '../interfaces';
-export default function createHandlers(routes: IRoutes): Map<string, Function>;
+import { IRoutes, IHandlers } from 'gabby-types';
+export default function createHandlers(routes: IRoutes): IHandlers;

@@ -24,9 +24,8 @@ function createHandlers(routes) {
         }
         children.forEach(function (child) { return recurse(child); });
     }
-    if (routes) {
-        recurse(routes);
-    }
+    recurse(routes);
     return tree;
 }
 exports.default = createHandlers;
+//# sourceMappingURL=createHandlers.js.map

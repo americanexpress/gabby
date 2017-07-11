@@ -13,10 +13,10 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
- 
-import { IRoutes, IRouteNode, IHandlers } from '../interfaces';
 
-export default function createHandlers(routes: IRoutes) {
+import { IRoutes, IRouteNode, IHandlers } from 'gabby-types';
+
+export default function createHandlers(routes: IRoutes): IHandlers {
   const tree: IHandlers = new Map();
 
   function recurse(node: IRouteNode) {
@@ -28,9 +28,7 @@ export default function createHandlers(routes: IRoutes) {
     children.forEach(child => recurse(child));
   }
 
-  if (routes) {
-    recurse(routes);
-  }
-
+  recurse(routes);
+  
   return tree;
 }

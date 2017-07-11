@@ -1,4 +1,3 @@
-/// <reference types="react" />
 import { StatelessComponent } from 'react';
 export interface IRedirectProps {
     name: string;

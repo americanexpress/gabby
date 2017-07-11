@@ -28,3 +28,4 @@ function createEntity(entities) {
     }); });
 }
 exports.default = createEntity;
+//# sourceMappingURL=createEntities.js.map

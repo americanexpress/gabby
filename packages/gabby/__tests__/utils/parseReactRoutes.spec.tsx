@@ -34,8 +34,10 @@ describe('Parse Routes', () => {
           <Route name="Accept Terms" when="#accept" component={TermsAccepted} />
           <Redirect name="Decline Terms" when="#decline" to="mocked.Goodbye" />
         </Route>
-        <Route name="Goodbye" component={Goodbye} />
-        <Route name="Help" when="#help" component={Help} />
+        <Root namespace="again">
+          <Route name="Goodbye" component={Goodbye} />
+          <Route name="Help" when="#help" component={Help} />
+        </Root>
       </Root>
     );
 
@@ -64,20 +66,24 @@ describe('Parse Routes', () => {
           ],
         },
         {
-          name: 'mocked.Goodbye',
-          when: undefined,
-          to: undefined,
-          handler: Goodbye,
-          children: [],
+          children: [
+            {
+              name: 'mocked.again.Goodbye',
+              when: undefined,
+              to: undefined,
+              handler: Goodbye,
+              children: [],
+            },
+            {
+              name: 'mocked.again.Help',
+              when: '#help',
+              to: undefined,
+              handler: Help,
+              children: [],
+            },
+          ],
         },
-        {
-          name: 'mocked.Help',
-          when: '#help',
-          to: undefined,
-          handler: Help,
-          children: [],
-        },
-      ]
+      ],
     });
   });
 
