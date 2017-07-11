@@ -1,5 +1,5 @@
 # Gabby
-Gabby provides a way to interface with several chatbot providers. Currently we support Watson conversation API.
+Gabby provides a way to interface with several chatbot providers through "adapters". Adapters interface with different services such as api.ai and Watson Conversation.
  
 # Why
 Many services provide a user interface for creating your chatbot but when you start to bring more developers into the picture it starts to fall apart. Gabby provides a way to have your chatbot be code/config driven as well as platform agnostic. Having your chatbot as code/config also allows you to version it using source control which makes upgrades and rollbacks a breeze.
@@ -8,6 +8,7 @@ Many services provide a user interface for creating your chatbot but when you st
 ##### Without JSX config:
 ```javascript
 import Gabby from 'gabby';
+import WatsonAdapter from 'gabby-adapter-watson';
 
 const routes = {
   children: [
@@ -27,12 +28,13 @@ const routes = {
 };
 
 const gabby = new Gabby({
-  name: 'my sweet chatbot',
-  credentials: {
+  adapter: new WatsonAdapter({
+    name: 'my sweet chatbot',
     username: 'xxx',
     password: 'xxx',
-    workspaceId: 'xxx'
-  },
+    workspaceId: 'xxx',
+    logger: console,
+  }),
   routes,
   intents: [
     {
@@ -62,6 +64,7 @@ import Gabby, {
   Root,
   Route
 } from 'gabby';
+import WatsonAdapter from 'gabby-adapter-watson';
 
 const routes = (
   <Root>
@@ -71,12 +74,13 @@ const routes = (
 );
 
 const gabby = new Gabby({
-  name: 'my sweet chatbot',
-  credentials: {
+  adapter: new WatsonAdapter({
+    name: 'my sweet chatbot',
     username: 'xxx',
     password: 'xxx',
-    workspaceId: 'xxx'
-  },
+    workspaceId: 'xxx',
+    logger: console,
+  }),
   routes,
   intents: [
     {
