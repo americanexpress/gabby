@@ -1,10 +1,10 @@
 # Gabby
-Gabby provides a way to interface with several chatbot providers through "adapters". Adapters interface with different services such as api.ai and Watson Conversation.
+> Gabby provides a way to interface with several chatbot providers through "adapters". Adapters interface with different services such as api.ai and Watson Conversation.
  
 # Why
 Many services provide a user interface for creating your chatbot but when you start to bring more developers into the picture it starts to fall apart. Gabby provides a way to have your chatbot be code/config driven as well as platform agnostic. Having your chatbot as code/config also allows you to version it using source control which makes upgrades and rollbacks a breeze.
  
-# Examples
+## Examples
 ##### Without JSX config:
 ```javascript
 import Gabby from 'gabby';

@@ -103,7 +103,7 @@ export class Gabby {
     }
 
     // handle promises as well as non-promise values
-    const msg = await new Promise(res => res(
+    const msg = await new Promise<string>(res => res(
       template({ context, intents, entities }),
     ));
 

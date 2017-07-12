@@ -34,7 +34,7 @@ export declare class Gabby {
     constructor({adapter, routes, intents, entities, logger}: IGabby);
     applyChanges(): Promise<void>;
     sendMessage(message: string, to?: string): Promise<{
-        msg: {};
+        msg: string;
         conversationId: string;
     }>;
     routes: IRoutes;
