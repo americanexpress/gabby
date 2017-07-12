@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
  
-import { IRoutes } from '../../src/interfaces';
+import { IRoutes } from 'gabby-types';
 import createHandlers from '../../src/utils/createHandlers';
 
 describe('Create handlers', () => {
