@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "description": "A Watson Conversation adapter for Gabby.",
   "main": "build/index.js",
+  "types": "build/index.d.ts",
   "scripts": {
     "build": "tsc",
     "prebuild": "rm -rf build",

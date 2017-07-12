@@ -1,3 +1,4 @@
+"use strict";
 /*
  * Copyright 2017 American Express
  *
@@ -13,8 +14,6 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
- 
-"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }

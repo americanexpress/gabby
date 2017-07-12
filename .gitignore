@@ -3,3 +3,4 @@ test-results/
 .vscode
 lerna-debug.log
 npm-debug.log
+credentials.json
