@@ -401,5 +401,73 @@ describe('Gabby', () => {
       expect(msg).toBe('Goodbye');
       expect(conversationId).toBe('testid');
     });
+
+    it('should allow overriding the context', async () => {
+      const adapter = new TestAdapter();
+      adapter.sendMessage.mockReturnValue(Promise.resolve({
+        templateId: 'mocked.again.Goodbye',
+        conversationId: 'testid',
+      }));
+
+      const gabby = new Gabby({
+        adapter,
+        routes: {
+          children: [
+            {
+              name: 'mocked.again.Goodbye',
+              when: '#test',
+              handler: () => 'Goodbye',
+              children: [],
+            },
+            {
+              name: 'mocked.again.Help',
+              when: '#help',
+              handler: () => 'Help',
+              children: [],
+            },
+          ],
+        },
+      });
+
+      await gabby.applyChanges();
+
+      await gabby.sendMessage('test', 'asdf', { custom: 'context' });
+      expect(adapter.sendMessage).toHaveBeenCalledWith('test', 'asdf', { custom: 'context' });
+    });
+
+    it('should handle templates returning object instead of string', async () => {
+      const adapter = new TestAdapter();
+      adapter.sendMessage.mockReturnValue(Promise.resolve({
+        templateId: 'mocked.again.Goodbye',
+        conversationId: 'testid',
+      }));
+
+      const gabby = new Gabby({
+        adapter,
+        routes: {
+          children: [
+            {
+              name: 'mocked.again.Goodbye',
+              when: '#test',
+              handler: () => ({ msg: 'Goodbye', context: { some: 'context' } }),
+              children: [],
+            },
+            {
+              name: 'mocked.again.Help',
+              when: '#help',
+              handler: () => 'Help',
+              children: [],
+            },
+          ],
+        },
+      });
+
+      await gabby.applyChanges();
+
+      const { msg, conversationId } = await gabby.sendMessage('test', 'asdf');
+      expect(msg).toBe('Goodbye');
+      expect(conversationId).toBe('testid');
+      expect(gabby.getContext('testid')).toEqual({ some: 'context' });
+    });
   });
 });
