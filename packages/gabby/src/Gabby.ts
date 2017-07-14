@@ -43,7 +43,7 @@ export class Gabby {
   private _entities: IEntities;
   private _logger: ILogger;
 
-  private contexts = new Map<string, object>();
+  private _contexts = new Map<string, object>();
 
   constructor({
     adapter,
@@ -73,7 +73,7 @@ export class Gabby {
     }
   }
 
-  async sendMessage(message: string, to?: string) {
+  async sendMessage(message: string, to?: string, contextOverride?: object) {
     if (!this.routes) {
       return Promise.reject(new Error('No routes specified'));
     }
@@ -88,9 +88,9 @@ export class Gabby {
       intents,
       entities,
       templateId
-    } = await this.adapter.sendMessage(message, to, this.contexts.get(to));
+    } = await this.adapter.sendMessage(message, to, contextOverride || this._contexts.get(to));
 
-    this.contexts.set(conversationId, context);
+    this._contexts.set(conversationId, context);
 
     if (!templateId) {
       return Promise.reject(new Error('No template specified'));
@@ -103,14 +103,24 @@ export class Gabby {
     }
 
     // handle promises as well as non-promise values
-    const msg = await new Promise<string>(res => res(
+    const res = await new Promise<string | { msg: string; context: object; }>(res => res(
       template({ context, intents, entities }),
     ));
+
+    let msg = res;
+    if (typeof res !== 'string') {
+      msg = res.msg;
+      this._contexts.set(conversationId, res.context);
+    }
 
     return Promise.resolve({
       msg,
       conversationId,
     });
+  }
+
+  getContext(conversationId: string) {
+    return this._contexts.get(conversationId);
   }
 
   get routes(): IRoutes {
