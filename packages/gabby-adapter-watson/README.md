@@ -1,9 +1,18 @@
-# Gabby
-> Gabby provides a way to interface with several chatbot providers through "adapters". Adapters interface with different services such as api.ai and Watson Conversation.
+# Gabby Adapter Watson
+> [Gabby](https://github.com/americanexpress/gabby) adapter Watson implements a Watson Conversation api adapter for the Gabby project
  
-This is the main package for Gabby. It handles orchestration between the adapter and your routes, intents, entities, etc. [More info](https://github.com/americanexpress/gabby)
- 
-## [Examples](https://github.com/americanexpress/gabby/tree/master/examples)
+## Examples
+##### Without JSX config:
+```javascript
+  import WatsonAdapter from 'gabby-adapter-watson';
+  const adapter = new WatsonAdapter({
+    name: 'Project name',
+    username: 'xxx',
+    password: 'xxx',
+    workspaceId: 'xxx',
+    logger: console,
+  });
+```
  
 ## Contributing
 We welcome Your interest in the American Express Open Source Community on Github. Any Contributor to any Open Source Project managed by the American Express Open Source Community must accept and sign an Agreement indicating agreement to the terms below. Except for the rights granted in this Agreement to American Express and to recipients of software distributed by American Express, You reserve all right, title, and interest, if any, in and to Your Contributions. Please [fill out the Agreement](http://goo.gl/forms/mIHWH1Dcuy).
