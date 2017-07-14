@@ -11,10 +11,7 @@
     "watch": "tsc --watch",
     "watch:build": "gulp watch:build"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/americanexpress/gabby/tree/master/packages/gabby"
-  },
+  "repository": "https://github.com/americanexpress/gabby/tree/master/packages/gabby",
   "keywords": [],
   "author": "Zach Ripka",
   "license": "Apache-2.0",
