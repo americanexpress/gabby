@@ -1,4 +1,6 @@
 {
+  "private": true,
+  "name": "gabby",
   "repository": "https://github.com/americanexpress/gabby",
   "license": "Apache-2.0",
   "devDependencies": {
