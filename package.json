@@ -1,7 +1,7 @@
 {
   "repository": "https://github.com/americanexpress/gabby",
-	"license": "Apache-2.0",
-	"devDependencies": {
-		"lerna": "^2.0.0"
-	}
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "lerna": "^2.0.0"
+  }
 }
