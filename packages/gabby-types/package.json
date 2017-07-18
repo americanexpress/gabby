@@ -1,6 +1,6 @@
 {
   "name": "gabby-types",
-  "version": "0.0.5",
+  "version": "0.5.0",
   "description": "Common Typescript types for Gabby.",
   "main": "build/index.js",
   "types": "build/index.d.ts",

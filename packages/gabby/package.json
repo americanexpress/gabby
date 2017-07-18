@@ -1,6 +1,6 @@
 {
   "name": "gabby",
-  "version": "0.0.5",
+  "version": "0.5.0",
   "description": "",
   "main": "build/index.js",
   "types": "build/index.d.ts",
@@ -8,8 +8,7 @@
     "build": "tsc",
     "build-gulp": "rm -rf ./build && gulp ts",
     "test": "jest --no-cache",
-    "watch": "tsc --watch",
-    "watch:build": "gulp watch:build"
+    "watch": "tsc --watch"
   },
   "repository": "https://github.com/americanexpress/gabby/tree/master/packages/gabby",
   "keywords": [],

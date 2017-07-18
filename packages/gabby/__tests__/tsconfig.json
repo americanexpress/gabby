@@ -1,13 +1,13 @@
 {
-	"compilerOptions": {
-		"module": "commonjs",
-		"target": "es6",
-		"lib": [
-			"es2015",
-			"dom"
-		],
-		"jsx": "react",
-		"declaration": true,
-		"sourceMap": true
-	}
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es6",
+    "lib": [
+      "es2015",
+      "dom"
+    ],
+    "jsx": "react",
+    "declaration": true,
+    "sourceMap": true
+  }
 }
