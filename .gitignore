@@ -4,3 +4,4 @@ test-results/
 lerna-debug.log
 npm-debug.log
 credentials.json
+package-lock.json
